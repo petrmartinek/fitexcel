@@ -55,6 +55,36 @@ struct MultiplicationNode : public BinaryOperatorNode
     // todo
 };
 
+struct LessThanNode : public BinaryOperatorNode
+{
+    // todo
+};
+
+struct LessOrEqualThanNode : public BinaryOperatorNode
+{
+    // todo
+};
+
+struct BiggerThanNode : public BinaryOperatorNode
+{
+    // todo
+};
+
+struct BiggerOrEqualThanNode : public BinaryOperatorNode
+{
+    // todo
+};
+
+struct EqualNode : public BinaryOperatorNode
+{
+    // todo
+};
+
+struct NotEqualNode : public BinaryOperatorNode
+{
+    // todo
+};
+
 //------------------------------------------------------------------------------
 
 struct NegationNode : public UnaryOperatorNode

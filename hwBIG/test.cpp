@@ -38,13 +38,6 @@
 #include "include/Spreadsheet.hpp"
 
 using namespace std::literals;
-// using CValue = std::variant<std::monostate, double, std::string>;
-
-// constexpr unsigned                     SPREADSHEET_CYCLIC_DEPS                 = 0x01;
-// constexpr unsigned                     SPREADSHEET_FUNCTIONS                   = 0x02;
-// constexpr unsigned                     SPREADSHEET_FILE_IO                     = 0x04;
-// constexpr unsigned                     SPREADSHEET_SPEED                       = 0x08;
-// constexpr unsigned                     SPREADSHEET_PARSER                      = 0x10;
 
 bool valueMatch(const CValue& r, const CValue& s)
 {
@@ -66,6 +59,11 @@ bool valueMatch(const CValue& r, const CValue& s)
 
 int main ()
 {
+  #ifndef PT
+
+  //* my tests
+
+  #else
   CSpreadsheet x0, x1;
   std::ostringstream oss;
   std::istringstream iss;
@@ -196,6 +194,7 @@ int main ()
   assert ( valueMatch ( x0 . getValue ( CPos ( "H12" ) ), CValue ( 25.0 ) ) );
   assert ( valueMatch ( x0 . getValue ( CPos ( "H13" ) ), CValue ( -22.0 ) ) );
   assert ( valueMatch ( x0 . getValue ( CPos ( "H14" ) ), CValue ( -22.0 ) ) );
+  #endif
   return EXIT_SUCCESS;
 }
 #endif /* __PROGTEST__ */

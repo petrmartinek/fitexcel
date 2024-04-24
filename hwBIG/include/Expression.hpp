@@ -6,6 +6,8 @@
 #include "AST.hpp"
 
 #include <string>
+#include <memory>
+#include <stack>
 
 struct ExpressionBuilder : public CExprBuilder
 {
@@ -27,14 +29,18 @@ struct ExpressionBuilder : public CExprBuilder
     void valReference(std::string val) override;
     void valRange(std::string val) override;
 
-    void funcCall(std::string fnName, int paramCount) override;
+    void funcCall(std::string fnName, int paramCount) override {}
 
 private:
-    // todo
+    Expression cell;
+    std::stack<std::shared_ptr<Node>> waitingList;  
 };
 
 struct Expression
 {
     // todo
+private:
+    std::shared_ptr<Node> start;
 };
+
 #endif

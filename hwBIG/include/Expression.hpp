@@ -3,6 +3,7 @@
 
 #include "../parser/expression.h"
 #include "CellPosition.hpp"
+#include "AST.hpp"
 
 #include <string>
 

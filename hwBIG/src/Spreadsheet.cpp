@@ -1,8 +1,7 @@
-#include "../include/Spreadsheet.h"
-#include "../include/CellPosition.h"
+#include "../include/Spreadsheet.hpp"
+#include "../include/CellPosition.hpp"
 // i think i need it?
-#include "../parser/expression.h"
-#include "../include/ExpressionBuilder.h"
+#include "../include/Expression.hpp"
 
 #include <iostream>
 #include <variant>

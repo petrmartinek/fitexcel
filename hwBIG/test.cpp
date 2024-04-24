@@ -32,12 +32,10 @@
 #include <charconv>
 #include <span>
 #include <utility>
-#include "parser/expression.h"
 
 // my headers
-#include "include/CellPosition.h" 
-#include "include/Spreadsheet.h"
-#include "include/ExpressionBuilder.h"
+#include "include/CellPosition.hpp"
+#include "include/Spreadsheet.hpp"
 
 using namespace std::literals;
 // using CValue = std::variant<std::monostate, double, std::string>;

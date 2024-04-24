@@ -1,4 +1,4 @@
-#include "../include/CellPosition.h"
+#include "../include/CellPosition.hpp"
 
 #include <string_view>
 // todo

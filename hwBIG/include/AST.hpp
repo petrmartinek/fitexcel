@@ -3,19 +3,31 @@
 
 #include <variant>
 #include <string>
+#include <memory>
 
 using CellValue = std::variant<std::monostate, double, std::string>;
 
 struct Node
 {
-    // todo
+    Node() = default;
+    virtual ~Node() = default;
+
+    virtual CellValue evaluate() const = 0;
 };
 
 //------------------------------------------------------------------------------
 
 struct CellValueNode : public Node
 {
-    // todo
+    explicit CellValueNode(CellValue value)
+        : Node(),
+          value(std::move(value))
+    {}
+
+    CellValue evaluate() const override { return value; }
+
+private:
+    CellValue value;
 };
 
 struct CellReferenceNode : public Node
@@ -25,38 +37,59 @@ struct CellReferenceNode : public Node
 
 struct BinaryOperatorNode : public Node
 {
-    // todo
+    BinaryOperatorNode(std::shared_ptr<Node> first, std::shared_ptr<Node> second)
+        : Node(),
+          first(first), second(second)
+    {}
+
+protected:
+    std::shared_ptr<Node> first;
+    std::shared_ptr<Node> second;
 };
 
 struct UnaryOperatorNode : public Node
 {
-    // todo
+    explicit UnaryOperatorNode(std::shared_ptr<Node> first)
+        : Node(),
+          first(first)
+    {}
+
+protected:
+    std::shared_ptr<Node> first;
 };
 
 //------------------------------------------------------------------------------
 
 struct AdditionNode : public BinaryOperatorNode
 {
-    // todo
+    using BinaryOperatorNode::BinaryOperatorNode;
+
+    CellValue evaluate() const override;
 };
 
 struct SubtractionNode : public BinaryOperatorNode
 {
-    // todo
+    using BinaryOperatorNode::BinaryOperatorNode;
+
+    CellValue evaluate() const override;
 };
 
 struct DivisionNode : public BinaryOperatorNode
 {
-    // todo
+    using BinaryOperatorNode::BinaryOperatorNode;
+
+    CellValue evaluate() const override;
 };
 
 struct MultiplicationNode : public BinaryOperatorNode
 {
-    // todo
+    using BinaryOperatorNode::BinaryOperatorNode;
+
+    CellValue evaluate() const override;
 };
 
 struct LessThanNode : public BinaryOperatorNode
-{
+{    
     // todo
 };
 
@@ -89,7 +122,7 @@ struct NotEqualNode : public BinaryOperatorNode
 
 struct NegationNode : public UnaryOperatorNode
 {
-    // todo
+    CellValue evaluate() const override;
 };
 
 //------------------------------------------------------------------------------

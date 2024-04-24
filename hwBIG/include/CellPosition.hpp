@@ -1,5 +1,5 @@
-#ifndef CellPositionIncluded
-#define CellPositionIncluded
+#ifndef CELL_POSITION_INCLUDED
+#define CELL_POSITION_INCLUDED
 
 #include <string_view>
 

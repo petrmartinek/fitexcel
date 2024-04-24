@@ -1,7 +1,7 @@
-#ifndef SpreadsheetIncluded
-#define SpreadsheetIncluded
+#ifndef SPREADSHEET_INCLUDED
+#define SPREADSHEET_INCLUDED
 
-#include "CellPosition.h"
+#include "CellPosition.hpp"
 
 #include <iostream>
 #include <variant>

@@ -1,8 +1,8 @@
-#ifndef ExpressionBuilderIncluded
-#define ExpressionBuilderIncluded
+#ifndef EXPRESSION_BUILDER_INCLUDED
+#define EXPRESSION_BUILDER_INCLUDED
 
 #include "../parser/expression.h"
-#include "CellPosition.h"
+#include "CellPosition.hpp"
 
 #include <string>
 
@@ -29,6 +29,11 @@ struct ExpressionBuilder : public CExprBuilder
     void funcCall(std::string fnName, int paramCount) override;
 
 private:
+    // todo
+};
+
+struct Expression
+{
     // todo
 };
 #endif

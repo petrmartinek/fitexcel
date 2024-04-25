@@ -134,6 +134,8 @@ struct NotEqualNode : public BinaryOperatorNode
 
 struct NegationNode : public UnaryOperatorNode
 {
+    using UnaryOperatorNode::UnaryOperatorNode;
+
     CellValue evaluate() const override;
 };
 

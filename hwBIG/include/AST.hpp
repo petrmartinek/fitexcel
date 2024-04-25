@@ -90,32 +90,44 @@ struct MultiplicationNode : public BinaryOperatorNode
 
 struct LessThanNode : public BinaryOperatorNode
 {    
-    // todo
+    using BinaryOperatorNode::BinaryOperatorNode;
+
+    CellValue evaluate() const override;
 };
 
 struct LessOrEqualThanNode : public BinaryOperatorNode
 {
-    // todo
+    using BinaryOperatorNode::BinaryOperatorNode;
+
+    CellValue evaluate() const override;
 };
 
 struct BiggerThanNode : public BinaryOperatorNode
 {
-    // todo
+    using BinaryOperatorNode::BinaryOperatorNode;
+
+    CellValue evaluate() const override;
 };
 
 struct BiggerOrEqualThanNode : public BinaryOperatorNode
 {
-    // todo
+    using BinaryOperatorNode::BinaryOperatorNode;
+
+    CellValue evaluate() const override;
 };
 
 struct EqualNode : public BinaryOperatorNode
 {
-    // todo
+    using BinaryOperatorNode::BinaryOperatorNode;
+
+    CellValue evaluate() const override;
 };
 
 struct NotEqualNode : public BinaryOperatorNode
 {
-    // todo
+    using BinaryOperatorNode::BinaryOperatorNode;
+
+    CellValue evaluate() const override;
 };
 
 //------------------------------------------------------------------------------

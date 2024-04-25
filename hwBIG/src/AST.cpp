@@ -3,6 +3,7 @@
 #include <variant>
 #include <string>
 #include <memory>
+#include <cmath>
 
 /* 
     ? Maybe overload operators for CellValue would be nice?
@@ -82,6 +83,21 @@ CellValue MultiplicationNode::evaluate() const
 
 //------------------------------------------------------------------------------
 
+CellValue PowerToNode::evaluate() const
+{
+    CellValue lhs = first->evaluate(),
+              rhs = second->evaluate();
+
+    if(!std::holds_alternative<double>(lhs) || !std::holds_alternative<double>(rhs))
+    {
+        return CellValue();
+    }
+
+    return std::pow(std::get<double>(lhs), std::get<double>(rhs));
+}
+
+//------------------------------------------------------------------------------
+
 CellValue NegationNode::evaluate() const
 {
     CellValue result = first->evaluate();
@@ -136,7 +152,7 @@ CellValue LessOrEqualThanNode::evaluate() const
 
 //------------------------------------------------------------------------------
 
-CellValue BiggerThanNode::evaluate() const
+CellValue GreaterThanNode::evaluate() const
 {
     CellValue lhs = first->evaluate(),
               rhs = second->evaluate();
@@ -156,7 +172,7 @@ CellValue BiggerThanNode::evaluate() const
 
 //------------------------------------------------------------------------------
 
-CellValue BiggerOrEqualThanNode::evaluate() const
+CellValue GreaterOrEqualThanNode::evaluate() const
 {
     CellValue lhs = first->evaluate(),
               rhs = second->evaluate();

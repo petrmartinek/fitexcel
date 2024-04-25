@@ -88,6 +88,13 @@ struct MultiplicationNode : public BinaryOperatorNode
     CellValue evaluate() const override;
 };
 
+struct PowerToNode : public BinaryOperatorNode
+{
+    using BinaryOperatorNode::BinaryOperatorNode;
+
+    CellValue evaluate() const override;
+};
+
 struct LessThanNode : public BinaryOperatorNode
 {    
     using BinaryOperatorNode::BinaryOperatorNode;
@@ -102,14 +109,14 @@ struct LessOrEqualThanNode : public BinaryOperatorNode
     CellValue evaluate() const override;
 };
 
-struct BiggerThanNode : public BinaryOperatorNode
+struct GreaterThanNode : public BinaryOperatorNode
 {
     using BinaryOperatorNode::BinaryOperatorNode;
 
     CellValue evaluate() const override;
 };
 
-struct BiggerOrEqualThanNode : public BinaryOperatorNode
+struct GreaterOrEqualThanNode : public BinaryOperatorNode
 {
     using BinaryOperatorNode::BinaryOperatorNode;
 

@@ -11,6 +11,9 @@ struct CellPosition
     
     bool operator<(const CellPosition& other) const;
 
+    size_t row() const { return rowIndex; }
+    const std::string& column() const { return columnIndex; }
+
     friend std::ostream& operator<<(std::ostream& os, const CellPosition& pos);
 
 private:

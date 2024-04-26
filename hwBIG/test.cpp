@@ -63,6 +63,26 @@ int main ()
 
   //* my tests
 
+  // CellPosition x0("A7");
+
+  // std::cout << x0 << std::endl;
+
+  ExpressionBuilder cell;
+  parseExpression("=3 + 4 * 7 ^ 5 - 2 - -8", cell);
+  assert(valueMatch(cell.waitingList.top()->evaluate(), CellValue(67237.0)));
+
+  Spreadsheet excel;
+
+  excel.setCell(CellPosition("A1"), "10");
+  excel.setCell(CellPosition("A2"), "20.5");
+  excel.setCell(CellPosition("A3"), "3e1");
+  assert(valueMatch(excel.getValue(CellPosition("a1")), CellValue(10.)));
+  assert(valueMatch(excel.getValue(CellPosition("a2")), CellValue(20.5)));
+  assert(valueMatch(excel.getValue(CellPosition("a3")), CellValue(3e1)));
+
+  excel.setCell(CellPosition("A4"), "=1 + 2*3 - -2 ^ 3");
+  assert(valueMatch(excel.getValue(CellPosition("A4")), CellValue(15.)));
+
   #else
   CSpreadsheet x0, x1;
   std::ostringstream oss;

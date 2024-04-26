@@ -1,46 +1,32 @@
-#ifndef EXPRESSION_BUILDER_INCLUDED
-#define EXPRESSION_BUILDER_INCLUDED
+#ifndef EXPRESSION_INCLUDED
+#define EXPRESSION_INCLUDED
 
 #include "../parser/expression.h"
-#include "CellPosition.hpp"
+#include "ExpressionBuilder.hpp"
 #include "AST.hpp"
 
 #include <string>
 #include <memory>
-#include <stack>
 
-struct ExpressionBuilder : public CExprBuilder
-{
-    void opAdd() override;
-    void opSub() override;
-    void opMul() override;
-    void opDiv() override;
-    void opPow() override;
-    void opNeg() override;
-    void opEq() override;
-    void opNe() override;
-    void opLt() override;
-    void opLe() override;
-    void opGt() override;
-    void opGe() override;
-
-    void valNumber(double val) override;
-    void valString(std::string val) override;
-    void valReference(std::string val) override;
-    void valRange(std::string val) override;
-
-    void funcCall(std::string fnName, int paramCount) override {}
-
-private:
-    Expression cell;
-    std::stack<std::shared_ptr<Node>> waitingList;  
-};
+using Node_sp = std::shared_ptr<Node>;
 
 struct Expression
 {
-    // todo
-private:
-    std::shared_ptr<Node> start;
-};
+    Expression()
+        : start(Node_sp(new CellValueNode{{}}))
+    {}
+    explicit Expression(Node_sp node)
+        : start(node)
+    {}
+    explicit Expression(const std::string& expression)
+        : start(createTree(expression))
+    {}
 
+    CellValue evaluate() const { return start->evaluate(); }
+
+private:
+    Node_sp start;
+
+    static Node_sp createTree(const std::string& expression);
+};
 #endif

@@ -11,7 +11,7 @@
 
 using namespace std::literals;
 using CellValue = std::variant<std::monostate, double, std::string>;
-using Cell = ExpressionBuilder;
+using Cell = std::shared_ptr<Expression>;
 
 constexpr unsigned SPREADSHEET_CYCLIC_DEPS = 0/* x01 */;
 constexpr unsigned SPREADSHEET_FUNCTIONS = 0/* x02 */;
@@ -31,9 +31,9 @@ struct Spreadsheet
     bool load(std::istream &is) { return true; }
     bool save(std::ostream &os) const { return true; }
 
-    bool setCell(CellPosition pos, std::string contents);
+    bool setCell(const CellPosition& pos, const std::string& contents);
 
-    CellValue getValue(CellPosition pos);
+    CellValue getValue(const CellPosition& pos);
 
     void copyRect(CellPosition dst, CellPosition src, int w = 1, int h = 1);
 

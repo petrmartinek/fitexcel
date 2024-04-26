@@ -5,11 +5,6 @@
 #include <memory>
 #include <cmath>
 
-/* 
-    ? Maybe overload operators for CellValue would be nice?
-*/
-
-
 CellValue AdditionNode::evaluate() const
 {
     CellValue lhs = first->evaluate(),
@@ -34,7 +29,7 @@ CellValue AdditionNode::evaluate() const
 
 //------------------------------------------------------------------------------
 
-CellValue SubtractionNode::evaluate() const
+CellValue NumberOperatorNode::evaluate() const
 {
     CellValue lhs = first->evaluate(),
               rhs = second->evaluate();
@@ -44,56 +39,40 @@ CellValue SubtractionNode::evaluate() const
         return CellValue();
     }
 
-    return std::get<double>(lhs) - std::get<double>(rhs);
+    return evaluateNumberOperation(std::get<double>(lhs), std::get<double>(rhs));
 }
 
 //------------------------------------------------------------------------------
 
-CellValue DivisionNode::evaluate() const
+CellValue SubtractionNode::evaluateNumberOperation(double lhs, double rhs) const
 {
-    CellValue lhs = first->evaluate(),
-              rhs = second->evaluate();
-
-    if
-    (
-        !std::holds_alternative<double>(lhs) || !std::holds_alternative<double>(rhs)
-    ||  std::get<double>(rhs) == 0
-    )
-    {
-        return CellValue();
-    }
-
-    return std::get<double>(lhs) / std::get<double>(rhs);
+    return lhs - rhs;
 }
 
 //------------------------------------------------------------------------------
 
-CellValue MultiplicationNode::evaluate() const
+CellValue DivisionNode::evaluateNumberOperation(double lhs, double rhs) const
 {
-    CellValue lhs = first->evaluate(),
-              rhs = second->evaluate();
-
-    if(!std::holds_alternative<double>(lhs) || !std::holds_alternative<double>(rhs))
+    if(rhs == 0)
     {
         return CellValue();
     }
 
-    return std::get<double>(lhs) * std::get<double>(rhs);
+    return lhs / rhs;
 }
 
 //------------------------------------------------------------------------------
 
-CellValue PowerToNode::evaluate() const
+CellValue MultiplicationNode::evaluateNumberOperation(double lhs, double rhs) const
 {
-    CellValue lhs = first->evaluate(),
-              rhs = second->evaluate();
+    return lhs * rhs;
+}
 
-    if(!std::holds_alternative<double>(lhs) || !std::holds_alternative<double>(rhs))
-    {
-        return CellValue();
-    }
+//------------------------------------------------------------------------------
 
-    return std::pow(std::get<double>(lhs), std::get<double>(rhs));
+CellValue PowerToNode::evaluateNumberOperation(double lhs, double rhs) const
+{
+    return std::pow(lhs, rhs);
 }
 
 //------------------------------------------------------------------------------
@@ -112,19 +91,19 @@ CellValue NegationNode::evaluate() const
 
 //------------------------------------------------------------------------------
 
-CellValue LessThanNode::evaluate() const
+CellValue RelationOperatorNode::evaluate() const
 {
     CellValue lhs = first->evaluate(),
               rhs = second->evaluate();
 
     if(std::holds_alternative<double>(lhs) && std::holds_alternative<double>(rhs))
     {
-        return std::get<double>(lhs) < std::get<double>(rhs) ? 1. : 0.;
+        return numberRelation(std::get<double>(lhs), std::get<double>(rhs));
     }
 
     if(std::holds_alternative<std::string>(lhs) && std::holds_alternative<std::string>(rhs))
     {
-        return std::get<std::string>(lhs) < std::get<std::string>(rhs) ? 1. : 0.;
+        return textRelation(std::get<std::string>(lhs), std::get<std::string>(rhs));
     }
 
     return CellValue();
@@ -132,102 +111,74 @@ CellValue LessThanNode::evaluate() const
 
 //------------------------------------------------------------------------------
 
-CellValue LessOrEqualThanNode::evaluate() const
+double LessThanNode::numberRelation(double lhs, double rhs) const
 {
-    CellValue lhs = first->evaluate(),
-              rhs = second->evaluate();
+    return lhs < rhs;
+}
 
-    if(std::holds_alternative<double>(lhs) && std::holds_alternative<double>(rhs))
-    {
-        return std::get<double>(lhs) <= std::get<double>(rhs) ? 1. : 0.;
-    }
-
-    if(std::holds_alternative<std::string>(lhs) && std::holds_alternative<std::string>(rhs))
-    {
-        return std::get<std::string>(lhs) <= std::get<std::string>(rhs) ? 1. : 0.;
-    }
-
-    return CellValue();
+double LessThanNode::textRelation(const std::string& lhs, const std::string& rhs) const
+{
+    return lhs < rhs;
 }
 
 //------------------------------------------------------------------------------
 
-CellValue GreaterThanNode::evaluate() const
+double LessOrEqualThanNode::numberRelation(double lhs, double rhs) const
 {
-    CellValue lhs = first->evaluate(),
-              rhs = second->evaluate();
+    return lhs <= rhs;
+}
 
-    if(std::holds_alternative<double>(lhs) && std::holds_alternative<double>(rhs))
-    {
-        return std::get<double>(lhs) > std::get<double>(rhs) ? 1. : 0.;
-    }
-
-    if(std::holds_alternative<std::string>(lhs) && std::holds_alternative<std::string>(rhs))
-    {
-        return std::get<std::string>(lhs) > std::get<std::string>(rhs) ? 1. : 0.;
-    }
-
-    return CellValue();
+double LessOrEqualThanNode::textRelation(const std::string& lhs, const std::string& rhs) const
+{
+    return lhs <= rhs;
 }
 
 //------------------------------------------------------------------------------
 
-CellValue GreaterOrEqualThanNode::evaluate() const
+double GreaterThanNode::numberRelation(double lhs, double rhs) const
 {
-    CellValue lhs = first->evaluate(),
-              rhs = second->evaluate();
+    return lhs > rhs;
+}
 
-    if(std::holds_alternative<double>(lhs) && std::holds_alternative<double>(rhs))
-    {
-        return std::get<double>(lhs) >= std::get<double>(rhs) ? 1. : 0.;
-    }
-
-    if(std::holds_alternative<std::string>(lhs) && std::holds_alternative<std::string>(rhs))
-    {
-        return std::get<std::string>(lhs) >= std::get<std::string>(rhs) ? 1. : 0.;
-    }
-
-    return CellValue();
+double GreaterThanNode::textRelation(const std::string& lhs, const std::string& rhs) const
+{
+    return lhs > rhs;
 }
 
 //------------------------------------------------------------------------------
 
-CellValue EqualNode::evaluate() const
+double GreaterOrEqualThanNode::numberRelation(double lhs, double rhs) const
 {
-    CellValue lhs = first->evaluate(),
-              rhs = second->evaluate();
+    return lhs >= rhs;
+}
 
-    if(std::holds_alternative<double>(lhs) && std::holds_alternative<double>(rhs))
-    {
-        return std::get<double>(lhs) == std::get<double>(rhs) ? 1. : 0.;
-    }
-
-    if(std::holds_alternative<std::string>(lhs) && std::holds_alternative<std::string>(rhs))
-    {
-        return std::get<std::string>(lhs) == std::get<std::string>(rhs) ? 1. : 0.;
-    }
-
-    return CellValue();
+double GreaterOrEqualThanNode::textRelation(const std::string& lhs, const std::string& rhs) const
+{
+    return lhs >= rhs;
 }
 
 //------------------------------------------------------------------------------
 
-CellValue NotEqualNode::evaluate() const
+double EqualNode::numberRelation(double lhs, double rhs) const
 {
-    CellValue lhs = first->evaluate(),
-              rhs = second->evaluate();
+    return lhs == rhs;
+}
 
-    if(std::holds_alternative<double>(lhs) && std::holds_alternative<double>(rhs))
-    {
-        return std::get<double>(lhs) != std::get<double>(rhs) ? 1. : 0.;
-    }
+double EqualNode::textRelation(const std::string& lhs, const std::string& rhs) const
+{
+    return lhs == rhs;
+}
 
-    if(std::holds_alternative<std::string>(lhs) && std::holds_alternative<std::string>(rhs))
-    {
-        return std::get<std::string>(lhs) != std::get<std::string>(rhs) ? 1. : 0.;
-    }
+//------------------------------------------------------------------------------
 
-    return CellValue();
+double NotEqualNode::numberRelation(double lhs, double rhs) const
+{
+    return lhs != rhs;
+}
+
+double NotEqualNode::textRelation(const std::string& lhs, const std::string& rhs) const
+{
+    return lhs != rhs;
 }
 
 //------------------------------------------------------------------------------

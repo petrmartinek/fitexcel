@@ -67,74 +67,113 @@ struct AdditionNode : public BinaryOperatorNode
     CellValue evaluate() const override;
 };
 
-struct SubtractionNode : public BinaryOperatorNode
+struct NumberOperatorNode : public BinaryOperatorNode
 {
     using BinaryOperatorNode::BinaryOperatorNode;
 
     CellValue evaluate() const override;
+
+private:
+    virtual CellValue evaluateNumberOperation(double lhs, double rhs) const = 0;
 };
 
-struct DivisionNode : public BinaryOperatorNode
+struct RelationOperatorNode : public BinaryOperatorNode
 {
     using BinaryOperatorNode::BinaryOperatorNode;
 
     CellValue evaluate() const override;
+
+private:
+    virtual double numberRelation(double lhs, double rhs) const = 0;
+    virtual double textRelation(const std::string& lhs, const std::string& rhs) const = 0;
 };
 
-struct MultiplicationNode : public BinaryOperatorNode
+//------------------------------------------------------------------------------
+
+struct SubtractionNode : public NumberOperatorNode
 {
-    using BinaryOperatorNode::BinaryOperatorNode;
+    using NumberOperatorNode::NumberOperatorNode;
 
-    CellValue evaluate() const override;
+private:
+    CellValue evaluateNumberOperation(double lhs, double rhs) const override;
 };
 
-struct PowerToNode : public BinaryOperatorNode
+struct DivisionNode : public NumberOperatorNode
 {
-    using BinaryOperatorNode::BinaryOperatorNode;
+    using NumberOperatorNode::NumberOperatorNode;
 
-    CellValue evaluate() const override;
+private:
+    CellValue evaluateNumberOperation(double lhs, double rhs) const override;
 };
 
-struct LessThanNode : public BinaryOperatorNode
+struct MultiplicationNode : public NumberOperatorNode
+{
+    using NumberOperatorNode::NumberOperatorNode;
+
+private:
+    CellValue evaluateNumberOperation(double lhs, double rhs) const override;
+};
+
+struct PowerToNode : public NumberOperatorNode
+{
+    using NumberOperatorNode::NumberOperatorNode;
+
+private:
+    CellValue evaluateNumberOperation(double lhs, double rhs) const override;
+};
+
+//------------------------------------------------------------------------------
+
+struct LessThanNode : public RelationOperatorNode
 {    
-    using BinaryOperatorNode::BinaryOperatorNode;
+    using RelationOperatorNode::RelationOperatorNode;
 
-    CellValue evaluate() const override;
+private:
+    double numberRelation(double lhs, double rhs) const override;
+    double textRelation(const std::string& lhs, const std::string& rhs) const override;
 };
 
-struct LessOrEqualThanNode : public BinaryOperatorNode
+struct LessOrEqualThanNode : public RelationOperatorNode
 {
-    using BinaryOperatorNode::BinaryOperatorNode;
+    using RelationOperatorNode::RelationOperatorNode;
 
-    CellValue evaluate() const override;
+private:
+    double numberRelation(double lhs, double rhs) const override;
+    double textRelation(const std::string& lhs, const std::string& rhs) const override;
+};
+struct GreaterThanNode : public RelationOperatorNode
+{
+    using RelationOperatorNode::RelationOperatorNode;
+
+private:
+    double numberRelation(double lhs, double rhs) const override;
+    double textRelation(const std::string& lhs, const std::string& rhs) const override;
 };
 
-struct GreaterThanNode : public BinaryOperatorNode
+struct GreaterOrEqualThanNode : public RelationOperatorNode
 {
-    using BinaryOperatorNode::BinaryOperatorNode;
+    using RelationOperatorNode::RelationOperatorNode;
 
-    CellValue evaluate() const override;
+private:
+    double numberRelation(double lhs, double rhs) const override;
+    double textRelation(const std::string& lhs, const std::string& rhs) const override;
 };
 
-struct GreaterOrEqualThanNode : public BinaryOperatorNode
+struct EqualNode : public RelationOperatorNode
 {
-    using BinaryOperatorNode::BinaryOperatorNode;
+    using RelationOperatorNode::RelationOperatorNode;
 
-    CellValue evaluate() const override;
+private:
+    double numberRelation(double lhs, double rhs) const override;
+    double textRelation(const std::string& lhs, const std::string& rhs) const override;
 };
-
-struct EqualNode : public BinaryOperatorNode
+struct NotEqualNode : public RelationOperatorNode
 {
-    using BinaryOperatorNode::BinaryOperatorNode;
+    using RelationOperatorNode::RelationOperatorNode;
 
-    CellValue evaluate() const override;
-};
-
-struct NotEqualNode : public BinaryOperatorNode
-{
-    using BinaryOperatorNode::BinaryOperatorNode;
-
-    CellValue evaluate() const override;
+private:
+    double numberRelation(double lhs, double rhs) const override;
+    double textRelation(const std::string& lhs, const std::string& rhs) const override;
 };
 
 //------------------------------------------------------------------------------

@@ -13,11 +13,11 @@ endif
 CXX=g++
 OBJS= test.o CellPosition.o Expression.o Spreadsheet.o AST.o
 
-all: acme_program
-acme_program: $(OBJS)
+all: fitexcel.out
+fitexcel.out: $(OBJS)
 	$(LD) -o $@ $^ -L./parser/x86_64-linux-gnu/ -lexpression_parser
 clean:
-	rm -f acme_program $(OBJS)
+	rm -f fitexcel.out $(OBJS)
 %.o: %.cpp
 	$(CXX) $(CFLAGS) -c $<
 

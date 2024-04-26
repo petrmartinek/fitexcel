@@ -1,5 +1,6 @@
 # binaries
 *.out
+*.o
 
 # vscode stuff
 .vscode/

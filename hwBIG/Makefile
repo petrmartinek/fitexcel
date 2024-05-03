@@ -1,10 +1,10 @@
 # base borrowed from https://stackoverflow.com/a/1080019
-release ?= 1
-ifeq ($(debug), 1)
+release ?= 0
+ifeq ($(release), 1)
     CFLAGS =-std=c++20 -Wall -pedantic -O2 -DPT
 	LD=g++
 else
-    CFLAGS=-std=c++20 -Wall -pedantic -Werror -D_GLIBCXX_DEBUG -fsanitize=address -fsanitize=undefined -g -Og
+    CFLAGS=-std=c++20 -Wall -pedantic -Werror -Werror=maybe-uninitialized -D_GLIBCXX_DEBUG -fsanitize=address -fsanitize=undefined -g -Og
 # linker would otherwise scream at me
 	LD=g++ -fsanitize=address -fsanitize=undefined
 endif

@@ -5,6 +5,9 @@
 
 #include <variant>
 #include <string>
+#include <utility>
+
+using namespace std::literals;
 
 // rule of three ---------------------------------------------------------------
 
@@ -12,7 +15,7 @@ Spreadsheet::Spreadsheet(const Spreadsheet& other)
 {
     for(const auto& cell : other.table)
     {
-        setCell(cell.first, cell.second->toString());
+        setCell(cell.first, "="s + cell.second->toString());
     }
 }
 
@@ -22,7 +25,7 @@ const Spreadsheet& Spreadsheet::operator=(const Spreadsheet& other)
 
     for(const auto& cell : other.table)
     {
-        setCell(cell.first, cell.second->toString());
+        setCell(cell.first, "="s + cell.second->toString());
     }
 
     return *this;

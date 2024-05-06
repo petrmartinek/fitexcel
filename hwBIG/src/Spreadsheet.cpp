@@ -3,9 +3,32 @@
 #include "../include/AST.hpp"
 #include "../include/ExpressionBuilder.hpp"
 
-#include <iostream>
 #include <variant>
 #include <string>
+
+// rule of three ---------------------------------------------------------------
+
+Spreadsheet::Spreadsheet(const Spreadsheet& other)
+{
+    for(const auto& cell : other.table)
+    {
+        setCell(cell.first, cell.second->toString());
+    }
+}
+
+const Spreadsheet& Spreadsheet::operator=(const Spreadsheet& other)
+{
+    table.clear();
+
+    for(const auto& cell : other.table)
+    {
+        setCell(cell.first, cell.second->toString());
+    }
+
+    return *this;
+}
+
+//------------------------------------------------------------------------------
 
 bool Spreadsheet::setCell(const CellPosition& pos, const std::string& contents)
 {
@@ -13,7 +36,6 @@ bool Spreadsheet::setCell(const CellPosition& pos, const std::string& contents)
     parseExpression(contents, builder);
 
     table[pos] = builder.waitingList.top();
-    referencesInTable[pos] = builder.cellReferences;
 
     return true;
 }

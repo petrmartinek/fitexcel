@@ -31,6 +31,12 @@ struct Spreadsheet
 
     Spreadsheet() = default;
 
+    // rule of two three
+
+    Spreadsheet(const Spreadsheet& other);
+    const Spreadsheet& operator=(const Spreadsheet& other);
+    ~Spreadsheet() = default;
+
     bool load(std::istream &is) { return true; }
     bool save(std::ostream &os) const { return true; }
 
@@ -42,7 +48,6 @@ struct Spreadsheet
 
 private:
     std::map<CellPosition, Cell> table;
-    std::map<CellPosition, CellReferences> referencesInTable;
 };
 
 using CValue = CellValue; // for progtest

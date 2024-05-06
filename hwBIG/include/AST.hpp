@@ -6,6 +6,7 @@
 #include <variant>
 #include <string>
 #include <memory>
+#include <map>
 
 using CellValue = std::variant<std::monostate, double, std::string>;
 
@@ -34,18 +35,20 @@ private:
 
 struct CellReferenceNode : public Node
 {
+    using Node_sp = std::shared_ptr<Node>;
+
     static inline const char ABS_SYMBOL = '$';
     enum RELATIVE {NONE, COLUMN, ROW, COLUMN_AND_ROW};
 
-    CellReferenceNode(const CellPosition& referencePosition, std::shared_ptr<Node> reference, enum RELATIVE relativeVal)
-        : relative(relativeVal), position(referencePosition), start(reference)
+    CellReferenceNode(const CellPosition& referencePosition, std::map<CellPosition, Node_sp> * table, enum RELATIVE relativeVal)
+        : relative(relativeVal), position(referencePosition), lookupTable(table)
     {}
 
-    CellValue evaluate() const override { return start->evaluate(); }
+    CellValue evaluate() const override { return (*lookupTable)[position]->evaluate(); }
 private:
     RELATIVE relative;
     CellPosition position;
-    std::shared_ptr<Node> start;
+    std::map<CellPosition, Node_sp> * lookupTable;
 };
 
 struct BinaryOperatorNode : public Node

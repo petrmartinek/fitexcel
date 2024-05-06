@@ -161,7 +161,7 @@ void ExpressionBuilder::valReference(std::string val)
     // purely relative reference
     if(!numberOfAbsoluteSymbols)
     {
-        CellReferenceNode_sp tmp = std::make_shared<CellReferenceNode>(CellReferenceNode{position, (*table)[position], COLUMN_AND_ROW});
+        CellReferenceNode_sp tmp = std::make_shared<CellReferenceNode>(CellReferenceNode{position, table, COLUMN_AND_ROW});
 
         waitingList.push(tmp);
         cellReferences.emplace_back(tmp);
@@ -172,7 +172,7 @@ void ExpressionBuilder::valReference(std::string val)
     // fully absolute reference
     if(numberOfAbsoluteSymbols == 2)
     {
-        CellReferenceNode_sp tmp = std::make_shared<CellReferenceNode>(CellReferenceNode{position, (*table)[position], NONE});
+        CellReferenceNode_sp tmp = std::make_shared<CellReferenceNode>(CellReferenceNode{position, table, NONE});
 
         waitingList.push(tmp);
         cellReferences.emplace_back(tmp);
@@ -183,7 +183,7 @@ void ExpressionBuilder::valReference(std::string val)
 
     CellReferenceNode::RELATIVE type = (val.front() == CellReferenceNode::ABS_SYMBOL) ? ROW : COLUMN;  
 
-    CellReferenceNode_sp tmp = std::make_shared<CellReferenceNode>(CellReferenceNode{position, (*table)[position], type});
+    CellReferenceNode_sp tmp = std::make_shared<CellReferenceNode>(CellReferenceNode{position, table, type});
     
     waitingList.push(tmp);
     cellReferences.emplace_back(tmp);

@@ -4,6 +4,9 @@
 #include <string>
 #include <memory>
 #include <cmath>
+#include <utility>
+
+using namespace std::literals;
 
 std::string CellValueNode::toString() const
 {
@@ -14,7 +17,24 @@ std::string CellValueNode::toString() const
 
     if(std::holds_alternative<std::string>(value))
     {
-        return "\"" + std::get<std::string>(value) + "\"";
+        std::string outputString;
+        // trying to make this mess little effective
+        outputString.reserve(std::get<std::string>(value).size());
+
+        const std::string& inputString = std::get<std::string>(value);
+        for(const auto& c : inputString)
+        {
+            if(c != '"')
+            {
+                outputString += c;
+                continue;
+            }
+
+            // c == "
+            outputString += "\"\""s; // "quotes must be doubled: \"\" "
+        }
+
+        return "\""s + outputString + "\""s;
     }
 
     return "";

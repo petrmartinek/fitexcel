@@ -94,6 +94,9 @@ int main ()
   excel.setCell(CellPosition("A9"), "=1 + 2*3 + -2 ^ 4");
   assert(valueMatch(excel.getValue(CellPosition("A9")), CellValue(-9.)));
 
+  excel.setCell(CellPosition("A10"), "=\"hello \"\" there\"");
+  assert(valueMatch(excel.getValue(CellPosition("A10")), CellValue("hello \" there")));
+
   #else
   CSpreadsheet x0, x1;
   std::ostringstream oss;

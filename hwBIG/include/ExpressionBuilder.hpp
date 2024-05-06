@@ -43,9 +43,7 @@ struct ExpressionBuilder : public CExprBuilder
     void funcCall(std::string fnName, int paramCount) override {}
 
     std::stack<Node_sp> waitingList;
-    std::vector<CellReferenceNode_sp> cellReferences;
     std::map<CellPosition, Node_sp> * table;
-
 };
 
 #endif

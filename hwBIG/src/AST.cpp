@@ -5,6 +5,23 @@
 #include <memory>
 #include <cmath>
 
+std::string CellValueNode::toString() const
+{
+    if(std::holds_alternative<double>(value))
+    {
+        return std::to_string(std::get<double>(value));
+    }
+
+    if(std::holds_alternative<std::string>(value))
+    {
+        return "\"" + std::get<std::string>(value) + "\"";
+    }
+
+    return "";
+}
+
+//------------------------------------------------------------------------------
+
 CellValue AdditionNode::evaluate() const
 {
     CellValue lhs = first->evaluate(),

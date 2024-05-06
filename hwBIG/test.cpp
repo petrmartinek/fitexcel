@@ -88,6 +88,11 @@ int main ()
   excel.setCell(CellPosition("A6"), "=(A2 - 0.5) * a5");
   assert(valueMatch(excel.getValue(CellPosition("A6")), CellValue(610.)));
 
+  excel.setCell(CellPosition("A8"), "= 1 + 2");
+  assert(valueMatch(excel.getValue(CellPosition("A8")), CellValue(3.)));
+
+  excel.setCell(CellPosition("A9"), "=1 + 2*3 + -2 ^ 4");
+  assert(valueMatch(excel.getValue(CellPosition("A9")), CellValue(-9.)));
 
   #else
   CSpreadsheet x0, x1;

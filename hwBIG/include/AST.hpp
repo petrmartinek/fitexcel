@@ -16,7 +16,6 @@ struct Node
     virtual ~Node() = default;
 
     virtual CellValue evaluate() const = 0;
-    virtual std::shared_ptr<Node> clone() const = 0;
 };
 
 //------------------------------------------------------------------------------
@@ -29,8 +28,6 @@ struct CellValueNode : public Node
     {}
 
     CellValue evaluate() const override { return value; }
-
-    std::shared_ptr<Node> clone() const override { return std::make_shared<Node>(new CellValueNode(*this)); }
 
 private:
     CellValue value;
@@ -49,8 +46,6 @@ struct CellReferenceNode : public Node
 
     CellValue evaluate() const override { return (*lookupTable)[position]->evaluate(); }
 
-    std::shared_ptr<Node> clone() const override { return std::make_shared<Node>(new CellReferenceNode(*this)); }
-
 private:
     RELATIVE relative;
     CellPosition position;
@@ -64,8 +59,6 @@ struct BinaryOperatorNode : public Node
           first(first), second(second)
     {}
 
-    std::shared_ptr<Node> clone() const override = 0;
-
 protected:
     std::shared_ptr<Node> first;
     std::shared_ptr<Node> second;
@@ -78,8 +71,6 @@ struct UnaryOperatorNode : public Node
           first(first)
     {}
 
-    std::shared_ptr<Node> clone() const override = 0;
-
 protected:
     std::shared_ptr<Node> first;
 };
@@ -91,8 +82,6 @@ struct AdditionNode : public BinaryOperatorNode
     using BinaryOperatorNode::BinaryOperatorNode;
 
     CellValue evaluate() const override;
-
-    std::shared_ptr<Node> clone() const override { return std::make_shared<Node>(new AdditionNode(*this)); }
 };
 
 struct NumberOperatorNode : public BinaryOperatorNode
@@ -100,8 +89,6 @@ struct NumberOperatorNode : public BinaryOperatorNode
     using BinaryOperatorNode::BinaryOperatorNode;
 
     CellValue evaluate() const override;
-
-    std::shared_ptr<Node> clone() const override = 0;
 
 private:
     virtual CellValue evaluateNumberOperation(double lhs, double rhs) const = 0;
@@ -112,8 +99,6 @@ struct RelationOperatorNode : public BinaryOperatorNode
     using BinaryOperatorNode::BinaryOperatorNode;
 
     CellValue evaluate() const override;
-
-    std::shared_ptr<Node> clone() const override = 0;
 
 private:
     virtual double numberRelation(double lhs, double rhs) const = 0;
@@ -126,8 +111,6 @@ struct SubtractionNode : public NumberOperatorNode
 {
     using NumberOperatorNode::NumberOperatorNode;
 
-    std::shared_ptr<Node> clone() const override { return std::make_shared<Node>(new SubtractionNode(*this)); }
-
 private:
     CellValue evaluateNumberOperation(double lhs, double rhs) const override;
 };
@@ -135,8 +118,6 @@ private:
 struct DivisionNode : public NumberOperatorNode
 {
     using NumberOperatorNode::NumberOperatorNode;
-
-    std::shared_ptr<Node> clone() const override { return std::make_shared<Node>(new DivisionNode(*this)); }
 
 private:
     CellValue evaluateNumberOperation(double lhs, double rhs) const override;
@@ -146,8 +127,6 @@ struct MultiplicationNode : public NumberOperatorNode
 {
     using NumberOperatorNode::NumberOperatorNode;
 
-    std::shared_ptr<Node> clone() const override { return std::make_shared<Node>(new MultiplicationNode(*this)); }
-
 private:
     CellValue evaluateNumberOperation(double lhs, double rhs) const override;
 };
@@ -155,8 +134,6 @@ private:
 struct PowerToNode : public NumberOperatorNode
 {
     using NumberOperatorNode::NumberOperatorNode;
-
-    std::shared_ptr<Node> clone() const override { return std::make_shared<Node>(new PowerToNode(*this)); }
 
 private:
     CellValue evaluateNumberOperation(double lhs, double rhs) const override;
@@ -168,8 +145,6 @@ struct LessThanNode : public RelationOperatorNode
 {    
     using RelationOperatorNode::RelationOperatorNode;
 
-    std::shared_ptr<Node> clone() const override { return std::make_shared<Node>(new LessThanNode(*this)); }
-
 private:
     double numberRelation(double lhs, double rhs) const override;
     double textRelation(const std::string& lhs, const std::string& rhs) const override;
@@ -179,8 +154,6 @@ struct LessOrEqualThanNode : public RelationOperatorNode
 {
     using RelationOperatorNode::RelationOperatorNode;
 
-    std::shared_ptr<Node> clone() const override { return std::make_shared<Node>(new LessOrEqualThanNode(*this)); }
-
 private:
     double numberRelation(double lhs, double rhs) const override;
     double textRelation(const std::string& lhs, const std::string& rhs) const override;
@@ -188,8 +161,6 @@ private:
 struct GreaterThanNode : public RelationOperatorNode
 {
     using RelationOperatorNode::RelationOperatorNode;
-
-    std::shared_ptr<Node> clone() const override { return std::make_shared<Node>(new GreaterThanNode(*this)); }
 
 private:
     double numberRelation(double lhs, double rhs) const override;
@@ -200,8 +171,6 @@ struct GreaterOrEqualThanNode : public RelationOperatorNode
 {
     using RelationOperatorNode::RelationOperatorNode;
 
-    std::shared_ptr<Node> clone() const override { return std::make_shared<Node>(new GreaterOrEqualThanNode(*this)); }
-
 private:
     double numberRelation(double lhs, double rhs) const override;
     double textRelation(const std::string& lhs, const std::string& rhs) const override;
@@ -211,8 +180,6 @@ struct EqualNode : public RelationOperatorNode
 {
     using RelationOperatorNode::RelationOperatorNode;
 
-    std::shared_ptr<Node> clone() const override { return std::make_shared<Node>(new EqualNode(*this)); }
-
 private:
     double numberRelation(double lhs, double rhs) const override;
     double textRelation(const std::string& lhs, const std::string& rhs) const override;
@@ -220,8 +187,6 @@ private:
 struct NotEqualNode : public RelationOperatorNode
 {
     using RelationOperatorNode::RelationOperatorNode;
-
-    std::shared_ptr<Node> clone() const override { return std::make_shared<Node>(new NotEqualNode(*this)); }
 
 private:
     double numberRelation(double lhs, double rhs) const override;
@@ -235,8 +200,6 @@ struct NegationNode : public UnaryOperatorNode
     using UnaryOperatorNode::UnaryOperatorNode;
 
     CellValue evaluate() const override;
-
-    std::shared_ptr<Node> clone() const override { return std::make_shared<Node>(new NegationNode(*this)); }
 };
 
 //------------------------------------------------------------------------------

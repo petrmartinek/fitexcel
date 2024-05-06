@@ -1,6 +1,8 @@
 #ifndef AST_INCLUDED
 #define AST_INCLUDED
 
+#include "CellPosition.hpp"
+
 #include <variant>
 #include <string>
 #include <memory>
@@ -32,7 +34,18 @@ private:
 
 struct CellReferenceNode : public Node
 {
-    // todo
+    static inline const char ABS_SYMBOL = '$';
+    enum RELATIVE {NONE, COLUMN, ROW, COLUMN_AND_ROW};
+
+    CellReferenceNode(const CellPosition& referencePosition, std::shared_ptr<Node> reference, enum RELATIVE relativeVal)
+        : relative(relativeVal), position(referencePosition), start(reference)
+    {}
+
+    CellValue evaluate() const override { return start->evaluate(); }
+private:
+    RELATIVE relative;
+    CellPosition position;
+    std::shared_ptr<Node> start;
 };
 
 struct BinaryOperatorNode : public Node
@@ -183,18 +196,6 @@ struct NegationNode : public UnaryOperatorNode
     using UnaryOperatorNode::UnaryOperatorNode;
 
     CellValue evaluate() const override;
-};
-
-//------------------------------------------------------------------------------
-
-struct AbsoluteCellReferenceNode : public CellReferenceNode
-{
-    // todo
-};
-
-struct RelativeCellReferenceNode : public CellReferenceNode
-{
-    // todo
 };
 
 //------------------------------------------------------------------------------

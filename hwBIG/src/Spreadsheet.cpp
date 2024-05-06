@@ -1,6 +1,7 @@
 #include "../include/Spreadsheet.hpp"
 #include "../include/CellPosition.hpp"
-#include "../include/Expression.hpp"
+#include "../include/AST.hpp"
+#include "../include/ExpressionBuilder.hpp"
 
 #include <iostream>
 #include <variant>
@@ -8,7 +9,11 @@
 
 bool Spreadsheet::setCell(const CellPosition& pos, const std::string& contents)
 {
-    table[pos] = Cell{new Expression{contents}};
+    ExpressionBuilder builder(&table);
+    parseExpression(contents, builder);
+
+    table[pos] = builder.waitingList.top();
+    referencesInTable[pos] = builder.cellReferences;
 
     return true;
 }

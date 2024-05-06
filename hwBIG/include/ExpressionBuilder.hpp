@@ -8,11 +8,20 @@
 #include <string>
 #include <memory>
 #include <stack>
+#include <vector>
+#include <map>
 
 using Node_sp = std::shared_ptr<Node>;
+using CellReferenceNode_sp = std::shared_ptr<CellReferenceNode>;
 
 struct ExpressionBuilder : public CExprBuilder
 {
+    ExpressionBuilder() = default;
+
+    explicit ExpressionBuilder(std::map<CellPosition, Node_sp> * table)
+        : table(table)
+    {}
+
     void opAdd() override;
     void opSub() override;
     void opMul() override;
@@ -28,12 +37,15 @@ struct ExpressionBuilder : public CExprBuilder
 
     void valNumber(double val) override;
     void valString(std::string val) override;
-    void valReference(std::string val) override {}
+    void valReference(std::string val) override;
     void valRange(std::string val) override {}
 
     void funcCall(std::string fnName, int paramCount) override {}
 
     std::stack<Node_sp> waitingList;
+    std::vector<CellReferenceNode_sp> cellReferences;
+    std::map<CellPosition, Node_sp> * table;
+
 };
 
 #endif

@@ -5,6 +5,8 @@
 #include <memory>
 #include <stack>
 #include <iostream>
+#include <vector>
+#include <map>
 
 void ExpressionBuilder::opAdd()
 {
@@ -133,5 +135,56 @@ void ExpressionBuilder::valNumber(double val)
 
 void ExpressionBuilder::valString(std::string val)
 {
-    waitingList.push(Node_sp(new CellValueNode{CellValue{val}}));
+    waitingList.push(Node_sp(new CellValueNode{CellValue{std::move(val)}}));
+}
+
+//------------------------------------------------------------------------------
+
+void ExpressionBuilder::valReference(std::string val)
+{    
+    // im hoping that parser is not allowing invalid argument to be passed
+
+    using enum CellReferenceNode::RELATIVE;
+
+    int numberOfAbsoluteSymbols = std::count(val.begin(), val.end(), CellReferenceNode::ABS_SYMBOL);
+
+    std::string valWithoutAbsoluteSymbols;
+    std::copy_if(val.begin(), val.end(), std::back_inserter<std::string>(valWithoutAbsoluteSymbols),
+        [](const char& c)
+        {
+            return c != CellReferenceNode::ABS_SYMBOL;
+        }
+    );
+
+    CellPosition position{valWithoutAbsoluteSymbols};
+
+    // purely relative reference
+    if(!numberOfAbsoluteSymbols)
+    {
+        CellReferenceNode_sp tmp = std::make_shared<CellReferenceNode>(CellReferenceNode{position, (*table)[position], COLUMN_AND_ROW});
+
+        waitingList.push(tmp);
+        cellReferences.emplace_back(tmp);
+
+        return;
+    }
+
+    // fully absolute reference
+    if(numberOfAbsoluteSymbols == 2)
+    {
+        CellReferenceNode_sp tmp = std::make_shared<CellReferenceNode>(CellReferenceNode{position, (*table)[position], NONE});
+
+        waitingList.push(tmp);
+        cellReferences.emplace_back(tmp);
+
+        return;
+    }
+    // row or column is relative
+
+    CellReferenceNode::RELATIVE type = (val.front() == CellReferenceNode::ABS_SYMBOL) ? ROW : COLUMN;  
+
+    CellReferenceNode_sp tmp = std::make_shared<CellReferenceNode>(CellReferenceNode{position, (*table)[position], type});
+    
+    waitingList.push(tmp);
+    cellReferences.emplace_back(tmp);
 }

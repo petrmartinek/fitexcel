@@ -1,17 +1,20 @@
 #ifndef SPREADSHEET_INCLUDED
 #define SPREADSHEET_INCLUDED
 
-#include "Expression.hpp"
+#include "AST.hpp"
 #include "CellPosition.hpp"
+#include "ExpressionBuilder.hpp"
 
 #include <iostream>
 #include <variant>
 #include <string>
 #include <map>
+#include <vector>
 
 using namespace std::literals;
 using CellValue = std::variant<std::monostate, double, std::string>;
-using Cell = std::shared_ptr<Expression>;
+using Cell = std::shared_ptr<Node>;
+using CellReferences = std::vector<std::shared_ptr<CellReferenceNode>>;
 
 constexpr unsigned SPREADSHEET_CYCLIC_DEPS = 0/* x01 */;
 constexpr unsigned SPREADSHEET_FUNCTIONS = 0/* x02 */;
@@ -35,10 +38,11 @@ struct Spreadsheet
 
     CellValue getValue(const CellPosition& pos);
 
-    void copyRect(CellPosition dst, CellPosition src, int w = 1, int h = 1);
+    void copyRect(CellPosition dst, CellPosition src, int w = 1, int h = 1) {}
 
 private:
     std::map<CellPosition, Cell> table;
+    std::map<CellPosition, CellReferences> referencesInTable;
 };
 
 using CValue = CellValue; // for progtest

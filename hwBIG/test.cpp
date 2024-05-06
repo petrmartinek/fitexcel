@@ -83,6 +83,12 @@ int main ()
   excel.setCell(CellPosition("A4"), "=1 + 2*3 - -2 ^ 3");
   assert(valueMatch(excel.getValue(CellPosition("A4")), CellValue(15.)));
 
+  excel.setCell(CellPosition("A5"), "=A1 + A2");
+  assert(valueMatch(excel.getValue(CellPosition("A5")), CellValue(30.5)));
+  excel.setCell(CellPosition("A6"), "=(A2 - 0.5) * a5");
+  assert(valueMatch(excel.getValue(CellPosition("A6")), CellValue(610.)));
+
+
   #else
   CSpreadsheet x0, x1;
   std::ostringstream oss;

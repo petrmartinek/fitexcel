@@ -18,6 +18,8 @@ struct Node
     Node() = default;
     virtual ~Node() = default;
 
+    virtual std::shared_ptr<Node> clone() const = 0;
+
     virtual CellValue evaluate() const = 0;
 
     virtual std::string toString() const = 0;
@@ -31,6 +33,8 @@ struct CellValueNode : public Node
         : Node(),
           value(std::move(value))
     {}
+
+    std::shared_ptr<Node> clone() const override { return std::make_shared<CellValueNode>(*this); }
 
     CellValue evaluate() const override { return value; }
 
@@ -50,6 +54,9 @@ struct CellReferenceNode : public Node
     CellReferenceNode(const CellPosition& referencePosition, std::map<CellPosition, Node_sp> * table, enum RELATIVE relativeVal)
         : relative(relativeVal), position(referencePosition), lookupTable(table)
     {}
+
+    // expects the clone to be used inside its original spreadsheet 
+    std::shared_ptr<Node> clone() const override { return std::make_shared<CellReferenceNode>(*this); }
 
     CellValue evaluate() const override { return (*lookupTable)[position]->evaluate(); }
 
@@ -90,6 +97,8 @@ struct AdditionNode : public BinaryOperatorNode
 {
     using BinaryOperatorNode::BinaryOperatorNode;
 
+    std::shared_ptr<Node> clone() const override { return std::make_shared<AdditionNode>(AdditionNode{first->clone(), second->clone()}); }
+
     CellValue evaluate() const override;
 
     std::string toString() const override { return std::string("("s + first->toString() + " + "s + second->toString() + ")"s); }
@@ -122,6 +131,8 @@ struct SubtractionNode : public NumberOperatorNode
 {
     using NumberOperatorNode::NumberOperatorNode;
 
+    std::shared_ptr<Node> clone() const override { return std::make_shared<SubtractionNode>(SubtractionNode{first->clone(), second->clone()}); }
+
     std::string toString() const override { return std::string("("s + first->toString() + " - "s + second->toString() + ")"s); }
 
 private:
@@ -131,6 +142,8 @@ private:
 struct DivisionNode : public NumberOperatorNode
 {
     using NumberOperatorNode::NumberOperatorNode;
+
+    std::shared_ptr<Node> clone() const override { return std::make_shared<DivisionNode>(DivisionNode{first->clone(), second->clone()}); }
 
     std::string toString() const override { return std::string("("s + first->toString() + " / "s + second->toString() + ")"s); }
 
@@ -142,6 +155,8 @@ struct MultiplicationNode : public NumberOperatorNode
 {
     using NumberOperatorNode::NumberOperatorNode;
 
+    std::shared_ptr<Node> clone() const override { return std::make_shared<MultiplicationNode>(MultiplicationNode{first->clone(), second->clone()}); }
+
     std::string toString() const override { return std::string("("s + first->toString() + " * "s + second->toString() + ")"s); }
 
 private:
@@ -151,6 +166,8 @@ private:
 struct PowerToNode : public NumberOperatorNode
 {
     using NumberOperatorNode::NumberOperatorNode;
+
+    std::shared_ptr<Node> clone() const override { return std::make_shared<PowerToNode>(PowerToNode{first->clone(), second->clone()}); }
 
     std::string toString() const override { return std::string("("s + first->toString() + " ^ "s + second->toString() + ")"s); }
 
@@ -164,6 +181,8 @@ struct LessThanNode : public RelationOperatorNode
 {    
     using RelationOperatorNode::RelationOperatorNode;
 
+    std::shared_ptr<Node> clone() const override { return std::make_shared<LessThanNode>(LessThanNode{first->clone(), second->clone()}); }
+
     std::string toString() const override { return std::string("("s + first->toString() + " < "s + second->toString() + ")"s); }
 
 private:
@@ -175,6 +194,8 @@ struct LessOrEqualThanNode : public RelationOperatorNode
 {
     using RelationOperatorNode::RelationOperatorNode;
 
+    std::shared_ptr<Node> clone() const override { return std::make_shared<LessOrEqualThanNode>(LessOrEqualThanNode{first->clone(), second->clone()}); }
+
     std::string toString() const override { return std::string("("s + first->toString() + " <= "s + second->toString() + ")"s); }
 
 private:
@@ -184,6 +205,8 @@ private:
 struct GreaterThanNode : public RelationOperatorNode
 {
     using RelationOperatorNode::RelationOperatorNode;
+
+    std::shared_ptr<Node> clone() const override { return std::make_shared<GreaterThanNode>(GreaterThanNode{first->clone(), second->clone()}); }
 
     std::string toString() const override { return std::string("("s + first->toString() + " > "s + second->toString() + ")"s); }
 
@@ -196,6 +219,8 @@ struct GreaterOrEqualThanNode : public RelationOperatorNode
 {
     using RelationOperatorNode::RelationOperatorNode;
 
+    std::shared_ptr<Node> clone() const override { return std::make_shared<GreaterOrEqualThanNode>(GreaterOrEqualThanNode{first->clone(), second->clone()}); }
+
     std::string toString() const override { return std::string("("s + first->toString() + " >= "s + second->toString() + ")"s); }
 
 private:
@@ -207,6 +232,8 @@ struct EqualNode : public RelationOperatorNode
 {
     using RelationOperatorNode::RelationOperatorNode;
 
+    std::shared_ptr<Node> clone() const override { return std::make_shared<EqualNode>(EqualNode{first->clone(), second->clone()}); }
+
     std::string toString() const override { return std::string("("s + first->toString() + " == "s + second->toString() + ")"s); }
 
 private:
@@ -216,6 +243,8 @@ private:
 struct NotEqualNode : public RelationOperatorNode
 {
     using RelationOperatorNode::RelationOperatorNode;
+
+    std::shared_ptr<Node> clone() const override { return std::make_shared<NotEqualNode>(NotEqualNode{first->clone(), second->clone()}); }
 
     std::string toString() const override { return std::string("("s + first->toString() + " <> "s + second->toString() + ")"s); }
 
@@ -229,6 +258,8 @@ private:
 struct NegationNode : public UnaryOperatorNode
 {
     using UnaryOperatorNode::UnaryOperatorNode;
+
+    std::shared_ptr<Node> clone() const override { return std::make_shared<NegationNode>(first->clone()); }
 
     CellValue evaluate() const override;
 

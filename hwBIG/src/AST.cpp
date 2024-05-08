@@ -42,6 +42,31 @@ std::string CellValueNode::toString() const
 
 //------------------------------------------------------------------------------
 
+void CellReferenceNode::updateReferences(const std::pair<int, int>& moveDistance)
+{
+    if(relative == NONE)
+    {
+        return;
+    }
+
+    size_t newColumn = position.column();
+    size_t newRow = position.row();
+
+    if(relative == COLUMN_AND_ROW || relative == COLUMN)
+    {
+        newColumn += moveDistance.first;
+    }
+
+    if(relative == COLUMN_AND_ROW || relative == ROW)
+    {
+        newRow += moveDistance.second;
+    }
+
+    position = CellPosition{newColumn, newRow};
+}
+
+//------------------------------------------------------------------------------
+
 CellValue AdditionNode::evaluate() const
 {
     CellValue lhs = first->evaluate(),

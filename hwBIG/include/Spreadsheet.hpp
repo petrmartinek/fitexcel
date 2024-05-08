@@ -44,7 +44,7 @@ struct Spreadsheet
 
     CellValue getValue(const CellPosition& pos);
 
-    void copyRect(CellPosition dst, CellPosition src, int w = 1, int h = 1) {}
+    void copyRect(CellPosition dst, CellPosition src, int w = 1, int h = 1);
 
 private:
     std::map<CellPosition, Cell> table;

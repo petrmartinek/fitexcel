@@ -19,6 +19,7 @@ struct Node
     virtual ~Node() = default;
 
     virtual std::shared_ptr<Node> clone() const = 0;
+    virtual void updateReferences(const std::pair<int, int>& moveDistance) = 0;
 
     virtual CellValue evaluate() const = 0;
 
@@ -35,6 +36,7 @@ struct CellValueNode : public Node
     {}
 
     std::shared_ptr<Node> clone() const override { return std::make_shared<CellValueNode>(*this); }
+    void updateReferences(const std::pair<int, int>& moveDistance) override {}
 
     CellValue evaluate() const override { return value; }
 
@@ -58,6 +60,8 @@ struct CellReferenceNode : public Node
     // expects the clone to be used inside its original spreadsheet 
     std::shared_ptr<Node> clone() const override { return std::make_shared<CellReferenceNode>(*this); }
 
+    void updateReferences(const std::pair<int, int>& moveDistance) override;
+
     CellValue evaluate() const override { return (*lookupTable)[position]->evaluate(); }
 
     std::string toString() const override { return position.string(); }
@@ -75,6 +79,8 @@ struct BinaryOperatorNode : public Node
           first(first), second(second)
     {}
 
+    void updateReferences(const std::pair<int, int>& moveDistance) override { first->updateReferences(moveDistance); second->updateReferences(moveDistance); }
+
 protected:
     std::shared_ptr<Node> first;
     std::shared_ptr<Node> second;
@@ -86,6 +92,8 @@ struct UnaryOperatorNode : public Node
         : Node(),
           first(first)
     {}
+
+    void updateReferences(const std::pair<int, int>& moveDistance) override { first->updateReferences(moveDistance); }
 
 protected:
     std::shared_ptr<Node> first;

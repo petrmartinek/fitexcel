@@ -73,7 +73,7 @@ int main ()
 
   Spreadsheet excel;
 
-  excel.setCell(CellPosition("A1"), "10");
+  excel.setCell(CellPosition("A1"), "10"); 
   excel.setCell(CellPosition("A2"), "20.5");
   excel.setCell(CellPosition("A3"), "3e1");
   assert(valueMatch(excel.getValue(CellPosition("a1")), CellValue(10.)));
@@ -101,7 +101,7 @@ int main ()
 
   CellPosition a("AAA1");
   CellPosition b(703, 1);
-  
+
   assert(a.string() == b.string());
 
   CellPosition a1("CBZ1");
@@ -119,6 +119,37 @@ int main ()
   }
   std::cout << std::endl;
   #endif
+
+  // copyRect
+  
+  excel.copyRect(CellPosition("B1"), CellPosition("A1"), 1, 10);
+
+  assert(valueMatch(excel.getValue(CellPosition("a1")), excel.getValue(CellPosition("B1"))));
+  assert(valueMatch(excel.getValue(CellPosition("a2")), excel.getValue(CellPosition("B2"))));
+  assert(valueMatch(excel.getValue(CellPosition("a3")), excel.getValue(CellPosition("B3"))));
+  assert(valueMatch(excel.getValue(CellPosition("A4")), excel.getValue(CellPosition("B4"))));
+  assert(valueMatch(excel.getValue(CellPosition("A5")), excel.getValue(CellPosition("B5"))));
+  assert(valueMatch(excel.getValue(CellPosition("A6")), excel.getValue(CellPosition("B6"))));
+  assert(valueMatch(excel.getValue(CellPosition("A8")), excel.getValue(CellPosition("B8"))));
+  assert(valueMatch(excel.getValue(CellPosition("A9")), excel.getValue(CellPosition("B9"))));
+  assert(valueMatch(excel.getValue(CellPosition("A10")), excel.getValue(CellPosition("b10"))));
+
+  excel.setCell(CellPosition("A5"), "=A1 + B5 + B2 + A3");
+  assert(valueMatch(excel.getValue(CellPosition("A5")), CellValue(10 + 10 + 20.5 + 20.5 + 3e1)));
+  excel.setCell(CellPosition("A1"), "20");
+  assert(valueMatch(excel.getValue(CellPosition("A5")), CellValue(20 + 10 + 20.5 + 20.5 + 3e1)));
+  assert(valueMatch(excel.getValue(CellPosition("B5")), CellValue(30.5)));
+
+  excel.setCell(CellPosition("B11"), "=$A$10");
+  assert(valueMatch(excel.getValue(CellPosition("B11")), CellValue(excel.getValue(CellPosition("A10")))));
+
+  excel.copyRect(CellPosition("C1"), CellPosition("B11"));
+  assert(valueMatch(excel.getValue(CellPosition("C1")), CellValue(excel.getValue(CellPosition("B11")))));
+
+  excel.setCell(CellPosition("C1"), "=B$2");
+
+  excel.copyRect(CellPosition("B3"), CellPosition("C1"));
+  assert(valueMatch(excel.getValue(CellPosition("B3")), CellValue(excel.getValue(CellPosition("A2")))));
 
   #else
   CSpreadsheet x0, x1;

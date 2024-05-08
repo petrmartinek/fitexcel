@@ -52,3 +52,27 @@ CellValue Spreadsheet::getValue(const CellPosition& pos)
 
     return table[pos]->evaluate();
 }
+
+//------------------------------------------------------------------------------
+
+void Spreadsheet::copyRect(CellPosition dst, CellPosition src, int w, int h)
+{
+    std::pair<int, int> positionShift = {dst.column() - src.column(), dst.row() - src.row()};
+
+    for(size_t i = src.column(); i < src.column() + w; ++i)
+    {
+        for(size_t j = src.row(); j < src.row() + h; ++j)
+        {
+            if(!table.contains(CellPosition{i, j}))
+            {
+                continue;
+            }
+
+            size_t dstI = i + positionShift.first;
+            size_t dstJ = j + positionShift.second;
+
+            table[CellPosition{dstI, dstJ}] = table[CellPosition{i, j}]->clone();
+            table[CellPosition{dstI, dstJ}]->updateReferences(positionShift);
+        }
+    }
+}

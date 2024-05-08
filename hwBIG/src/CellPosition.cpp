@@ -11,32 +11,6 @@
 #include <cmath>
 #include <cctype>
 
-CellPosition::CellPosition(const std::string_view& str)
-{
-    if(str.size() < 2 || !std::isalpha(str.front()) || !std::isdigit(str.back()))
-    {
-        throw std::invalid_argument("Invalid cell identifier");
-    }
-
-    size_t position = 0;
-
-    while(std::isalpha(str[position]))
-    {
-        ++position;
-    }
-
-    columnString = str.substr(0, position);
-
-    columnIndex = base26ToDec(columnString);
-
-    std::istringstream iss(std::string{str.substr(position)});
-
-    if(!(iss >> rowIndex))
-    {
-        throw std::invalid_argument("Invalid row index");
-    }
-}
-
 //------------------------------------------------------------------------------
 
 bool CellPosition::operator<(const CellPosition& other) const
@@ -59,9 +33,10 @@ std::ostream& operator<<(std::ostream& os, const CellPosition& pos)
 
 // ♥♥♥ all love goes to this guy https://www.mathsisfun.com/base-conversion-method.html ♥♥♥
 // this helped me how to make base-10 => base-26 and change the other way round
+// however here was a issue, so i love this guy 3000 https://stackoverflow.com/a/48984697
 
 // base-26:
-// Z = 0, A = 1, B = 2, ... , Y = 25
+// A = 1, B = 2, ... , Z = 26
 
 constexpr int RADIX = 26;
 constexpr int UPPER_ALPHABET_INDEX_MOD = 'A' - 1;
@@ -71,11 +46,17 @@ std::string CellPosition::decToBase26(size_t decimal)
 {
     std::string hexavigesimal;
 
-    while(decimal)
+    while(decimal > 0)
     {
         int remainder = decimal % RADIX;
 
         hexavigesimal.push_back(remainder != 0 ? UPPER_ALPHABET_INDEX_MOD + remainder : 'Z');
+
+        // zero needs special care
+        if(!remainder)
+        {
+            --decimal;
+        }
 
         decimal /= RADIX;
     }
@@ -92,8 +73,14 @@ size_t CellPosition::base26ToDec(const std::string& hexavigesimal)
 
     for(auto it = hexavigesimal.rbegin(); it != hexavigesimal.rend(); ++it)
     {
-        char coefficient = *it % (std::isupper(*it) ? UPPER_ALPHABET_INDEX_MOD : LOWER_ALPHABET_INDEX_MOD) % RADIX;
-        
+        // when calling from constructor theres no issue, but just in case
+        if(!std::isalpha(*it))
+        {
+            throw std::invalid_argument("input not a base-26 number!");
+        }
+
+        char coefficient = *it % (std::isupper(*it) ? UPPER_ALPHABET_INDEX_MOD : LOWER_ALPHABET_INDEX_MOD);
+
         decimal += coefficient * std::pow(RADIX, index);
 
         ++index;
@@ -104,19 +91,15 @@ size_t CellPosition::base26ToDec(const std::string& hexavigesimal)
 
 //------------------------------------------------------------------------------
 
-const std::string& CellPosition::createIdentifier()
+const std::string& CellPosition::createIdentifier() const
 {
+    // empty only if constructed from numbers, instead of string
     if(!identifier.empty())
     {
         return identifier;
     }
 
-    if(columnString.empty())
-    {
-        columnString = decToBase26(columnIndex);
-    }
-
-    identifier = columnString + std::to_string(rowIndex);
-
+    identifier = decToBase26(columnIndex) + std::to_string(rowIndex);
+    
     return identifier;
 }

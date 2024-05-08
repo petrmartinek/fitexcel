@@ -97,6 +97,29 @@ int main ()
   excel.setCell(CellPosition("A10"), "=\"hello \"\" there\"");
   assert(valueMatch(excel.getValue(CellPosition("A10")), CellValue("hello \" there")));
 
+  // testing conversion base26 <-> dec
+
+  CellPosition a("AAA1");
+  CellPosition b(703, 1);
+  
+  assert(a.string() == b.string());
+
+  CellPosition a1("CBZ1");
+  CellPosition b1(2106, 1);
+
+  assert(a1.column() == b1.column());
+  assert(a1.string() == b1.string());
+
+  #define PRINT_TEST 0
+  #if PRINT_TEST == 1
+  for(size_t i = 0; i < 2500; ++i)
+  {
+      CellPosition tmp{i,1};
+      std::cout << tmp.string() << '\n';
+  }
+  std::cout << std::endl;
+  #endif
+
   #else
   CSpreadsheet x0, x1;
   std::ostringstream oss;

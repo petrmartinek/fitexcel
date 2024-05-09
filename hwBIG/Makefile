@@ -44,5 +44,3 @@ Spreadsheet.o: src/Spreadsheet.cpp src/../include/Spreadsheet.hpp \
  src/../include/../parser/expression.h src/../include/CellPosition.hpp \
  src/../include/AST.hpp src/../include/ExpressionBuilder.hpp \
  src/../include/CellValue.hpp
-
-

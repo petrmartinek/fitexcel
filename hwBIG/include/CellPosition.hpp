@@ -8,7 +8,7 @@
 
 struct CellPosition
 {
-    explicit CellPosition(const std::string_view& str)
+    CellPosition(std::string_view str)
         : identifier(str), columnString(), columnIndex(), rowIndex()
     {
         if(str.size() < 2 || !std::isalpha(str.front()) || !std::isdigit(str.back()))

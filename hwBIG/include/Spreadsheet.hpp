@@ -40,9 +40,9 @@ struct Spreadsheet
     bool save(std::ostream &os) const;
     bool load(std::istream &is);
 
-    bool setCell(const CellPosition& pos, const std::string& contents);
+    bool setCell(CellPosition pos, std::string contents);
 
-    CellValue getValue(const CellPosition& pos);
+    CellValue getValue(CellPosition pos);
 
     void copyRect(CellPosition dst, CellPosition src, int w = 1, int h = 1);
 

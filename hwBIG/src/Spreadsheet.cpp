@@ -154,14 +154,14 @@ bool Spreadsheet::load(std::istream &is)
     return std::equal(loadedCellsInOrder.begin(), loadedCellsInOrder.end(), controlValues.begin(),
         [&](const CellPosition& position, const CellValue& value)
         {
-            return valueMatch(getValue(position), value);
+            return valueMatchTop(getValue(position), value);
         }
     );
 }
 
 //------------------------------------------------------------------------------
 
-bool Spreadsheet::setCell(const CellPosition& pos, const std::string& contents)
+bool Spreadsheet::setCell(CellPosition pos, std::string contents)
 {
     ExpressionBuilder builder(&table);
 
@@ -179,7 +179,7 @@ bool Spreadsheet::setCell(const CellPosition& pos, const std::string& contents)
     return true;
 }
 
-CellValue Spreadsheet::getValue(const CellPosition& pos)
+CellValue Spreadsheet::getValue(CellPosition pos)
 {
     if(!table.contains(pos))
     {

@@ -8,7 +8,8 @@
 
 using CValue = std::variant<std::monostate, double, std::string>;
 
-inline bool valueMatch(const CValue& r, const CValue& s)
+// borrowed from test.cpp
+inline bool valueMatchTop(const CValue& r, const CValue& s)
 {
   if ( r . index () != s . index () )
     return false;

@@ -65,6 +65,16 @@ void CellReferenceNode::updateReferences(const std::pair<int, int>& moveDistance
     position = CellPosition{newColumn, newRow};
 }
 
+CellValue CellReferenceNode::evaluate() const
+{
+    if(!lookupTable->contains(position))
+    {
+        return CellValue();
+    }
+
+    return (*lookupTable)[position]->evaluate();
+}
+
 std::string CellReferenceNode::toString() const
 {
     std::string output;

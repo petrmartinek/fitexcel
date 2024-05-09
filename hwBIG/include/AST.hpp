@@ -62,7 +62,7 @@ struct CellReferenceNode : public Node
 
     void updateReferences(const std::pair<int, int>& moveDistance) override;
 
-    CellValue evaluate() const override { return (*lookupTable)[position]->evaluate(); }
+    CellValue evaluate() const override;
 
     std::string toString() const override;
 

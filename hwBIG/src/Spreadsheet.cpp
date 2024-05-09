@@ -73,8 +73,6 @@ bool Spreadsheet::load(std::istream &is)
 
     Spreadsheet loadedSpreadsheet;
 
-    std::string line;
-
     std::vector<CellValue> controlValues;
     std::vector<CellPosition> loadedCellsInOrder;
 

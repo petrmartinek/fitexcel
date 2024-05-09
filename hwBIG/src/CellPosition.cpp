@@ -91,7 +91,13 @@ size_t CellPosition::base26ToDec(const std::string& hexavigesimal)
 
 //------------------------------------------------------------------------------
 
-const std::string& CellPosition::createIdentifier() const
+void CellPosition::createAlphaValues() const
+{
+    columnString = decToBase26(columnIndex);
+    identifier = columnString + std::to_string(rowIndex);
+}
+
+const std::string& CellPosition::getIdentifier() const
 {
     // empty only if constructed from numbers, instead of string
     if(!identifier.empty())
@@ -99,7 +105,20 @@ const std::string& CellPosition::createIdentifier() const
         return identifier;
     }
 
-    identifier = decToBase26(columnIndex) + std::to_string(rowIndex);
+    createAlphaValues();
     
     return identifier;
+}
+
+const std::string& CellPosition::getColumnString() const
+{
+    // empty only if constructed from numbers, instead of string
+    if(!columnString.empty())
+    {
+        return columnString;
+    }
+
+    createAlphaValues();
+
+    return columnString;
 }

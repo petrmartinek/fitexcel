@@ -41,21 +41,28 @@ struct CellPosition
 
     bool operator<(const CellPosition& other) const;
 
-    const std::string& string() const { return createIdentifier(); }
+    const std::string& string() const { return getIdentifier(); }
     size_t row() const { return rowIndex; }
     size_t column() const { return columnIndex; }
+    const std::string& columnAlpha() const { return getColumnString(); }
 
     friend std::ostream& operator<<(std::ostream& os, const CellPosition& pos);
 
 private:
-    const std::string& createIdentifier() const;
+    void createAlphaValues() const;
+    
+    const std::string& getIdentifier() const;
+    const std::string& getColumnString() const;
 
     static std::string decToBase26(size_t decimal);
     static size_t base26ToDec(const std::string& hexavigesimal);
                                     // base26 == hexavigesimal https://en.wiktionary.org/wiki/hexavigesimal
 
+    // mutable because it should save time not having to create strings from numbers
+    // for example in a additive loop
+    // only create it when first needed
     mutable std::string identifier;
-    std::string columnString;
+    mutable std::string columnString;
 
     size_t columnIndex;
     size_t rowIndex;

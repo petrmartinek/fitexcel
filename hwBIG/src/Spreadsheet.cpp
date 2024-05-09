@@ -36,8 +36,16 @@ const Spreadsheet& Spreadsheet::operator=(const Spreadsheet& other)
 bool Spreadsheet::setCell(const CellPosition& pos, const std::string& contents)
 {
     ExpressionBuilder builder(&table);
-    parseExpression(contents, builder);
 
+    try
+    {
+        parseExpression(contents, builder);
+    }
+    catch(const std::exception& e)
+    {
+        return false;
+    }
+    
     table[pos] = builder.waitingList.top();
 
     return true;

@@ -73,6 +73,8 @@ int main ()
 
   Spreadsheet excel;
 
+  assert(!excel.setCell(CellPosition("A3"), "==="));
+
   excel.setCell(CellPosition("A1"), "10"); 
   excel.setCell(CellPosition("A2"), "20.5");
   excel.setCell(CellPosition("A3"), "3e1");

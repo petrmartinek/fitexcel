@@ -220,6 +220,29 @@ int main ()
   CellPosition abcde(1, 0);
   assert(abcde.string() == "A0");
 
+  // copyRect some tests
+
+  Spreadsheet rect;
+  assert(rect.setCell(CellPosition("A1"), "1"));
+  assert(rect.setCell(CellPosition("A2"), "2"));
+  assert(rect.setCell(CellPosition("A3"), "3"));
+  assert(rect.setCell(CellPosition("B1"), "4"));
+  assert(rect.setCell(CellPosition("B2"), "5"));
+  assert(rect.setCell(CellPosition("B3"), "6"));
+
+  rect.copyRect(CellPosition("B2"), CellPosition("A1"), 2, 3);
+
+  assert(valueMatch(rect.getValue(CellPosition("A1")), CellValue(1.)));
+  assert(valueMatch(rect.getValue(CellPosition("A2")), CellValue(2.)));
+  assert(valueMatch(rect.getValue(CellPosition("A3")), CellValue(3.)));
+  assert(valueMatch(rect.getValue(CellPosition("B1")), CellValue(4.)));
+  assert(valueMatch(rect.getValue(CellPosition("B2")), CellValue(1.)));
+  assert(valueMatch(rect.getValue(CellPosition("B3")), CellValue(2.)));
+  assert(valueMatch(rect.getValue(CellPosition("B4")), CellValue(3.)));
+  assert(valueMatch(rect.getValue(CellPosition("C2")), CellValue(4.)));
+  assert(valueMatch(rect.getValue(CellPosition("C3")), CellValue(5.)));
+  assert(valueMatch(rect.getValue(CellPosition("C4")), CellValue(6.)));
+  
   #else
   CSpreadsheet x0, x1;
   std::ostringstream oss;

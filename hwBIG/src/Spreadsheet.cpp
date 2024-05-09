@@ -202,6 +202,8 @@ void Spreadsheet::copyRect(CellPosition dst, CellPosition src, int w, int h)
 {
     std::pair<long long, long long> positionShift = { (long long)dst.column() -  (long long)src.column(), (long long)dst.row() -  (long long)src.row()};
 
+    std::map<CellPosition, Cell> copiedRect;
+
     for(size_t i = src.column(); i < src.column() + w; ++i)
     {
         for(size_t j = src.row(); j < src.row() + h; ++j)
@@ -214,8 +216,15 @@ void Spreadsheet::copyRect(CellPosition dst, CellPosition src, int w, int h)
             size_t dstI = i + positionShift.first;
             size_t dstJ = j + positionShift.second;
 
-            table[CellPosition{dstI, dstJ}] = table[CellPosition{i, j}]->clone();
-            table[CellPosition{dstI, dstJ}]->updateReferences(positionShift);
+            copiedRect[CellPosition{dstI, dstJ}] = table[CellPosition{i, j}]->clone();
+            copiedRect[CellPosition{dstI, dstJ}]->updateReferences(positionShift);
         }
+    }
+    
+    // could be more effective
+
+    for(const auto& cell : copiedRect)
+    {
+        setCell(cell.first, "="s + cell.second->toString());
     }
 }

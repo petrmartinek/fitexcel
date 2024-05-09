@@ -71,7 +71,7 @@ bool Spreadsheet::load(std::istream &is)
         return false;
     }
 
-    table.clear();
+    Spreadsheet loadedSpreadsheet;
 
     std::string line;
 
@@ -136,8 +136,7 @@ bool Spreadsheet::load(std::istream &is)
             }
         }
 
-
-        if(!setCell(*position, expression))
+        if(!loadedSpreadsheet.setCell(*position, expression))
         {
             return false;
         }
@@ -151,12 +150,22 @@ bool Spreadsheet::load(std::istream &is)
         return false;
     }
 
-    return std::equal(loadedCellsInOrder.begin(), loadedCellsInOrder.end(), controlValues.begin(),
-        [&](const CellPosition& position, const CellValue& value)
-        {
-            return valueMatchTop(getValue(position), value);
-        }
-    );
+    if
+    (
+        !std::equal(loadedCellsInOrder.begin(), loadedCellsInOrder.end(), controlValues.begin(),
+            [&](const CellPosition& position, const CellValue& value)
+            {
+                return valueMatchTop(loadedSpreadsheet.getValue(position), value);
+            }
+        )
+    )
+    {
+        return false;
+    }
+
+    *this = loadedSpreadsheet;  
+
+    return true; 
 }
 
 //------------------------------------------------------------------------------

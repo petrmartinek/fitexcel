@@ -184,6 +184,40 @@ int main ()
   assert(valueMatch(excel.getValue(CellPosition("C1")), newExcel.getValue(CellPosition("C1"))));
   assert(valueMatch(excel.getValue(CellPosition("B5")), newExcel.getValue(CellPosition("B5"))));
 
+  //
+
+  assert(!excel.setCell(CellPosition("C10"), "=$$$$A1"));
+  assert(!excel.setCell(CellPosition("C10"), "=$A$$2"));
+
+  assert(newExcel.setCell(CellPosition("B3"), "=$B4"));
+  assert(newExcel.setCell(CellPosition("B4"), "=1 + 2"));
+  assert(newExcel.setCell(CellPosition("B2"), "=3 + 6"));
+  
+  assert(valueMatch(newExcel.getValue(CellPosition("B3")), CellValue(3.)));
+  assert(valueMatch(newExcel.getValue(CellPosition("B4")), CellValue(3.)));
+  assert(valueMatch(newExcel.getValue(CellPosition("B2")), CellValue(9.)));
+
+  newExcel.copyRect(CellPosition("A1"), CellPosition("B3"));
+
+  assert(valueMatch(newExcel.getValue(CellPosition("A1")), newExcel.getValue(CellPosition("B2"))));
+  
+  assert(newExcel.setCell(CellPosition("Z3"), "=$Z$1 + $Z$2"));
+  assert(newExcel.setCell(CellPosition("Z2"), ", world!"));
+  assert(newExcel.setCell(CellPosition("Z1"), "Hello"));
+
+  assert(valueMatch(newExcel.getValue(CellPosition("Z3")), CellValue("Hello, world!")));
+
+  std::ostringstream newExcel_save_before_load;
+  std::ostringstream newExcel_save_after_load;
+  assert(newExcel.save(newExcel_save_before_load));
+  std::string data = newExcel_save_before_load.str();
+  data[23] = '%';
+  std::istringstream newExcel_load(data);
+  assert(!newExcel.load(newExcel_load));
+  assert(newExcel.save(newExcel_save_after_load));
+  assert(newExcel_save_after_load.str() == newExcel_save_before_load.str());
+
+
   #else
   CSpreadsheet x0, x1;
   std::ostringstream oss;

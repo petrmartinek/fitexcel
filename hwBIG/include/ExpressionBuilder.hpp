@@ -4,6 +4,7 @@
 #include "../parser/expression.h"
 #include "CellPosition.hpp"
 #include "AST.hpp"
+#include "CellValue.hpp"
 
 #include <string>
 #include <memory>

@@ -1,5 +1,6 @@
 #include "../include/ExpressionBuilder.hpp"
 #include "../include/AST.hpp"
+#include "../include/CellValue.hpp"
 
 #include <string>
 #include <memory>

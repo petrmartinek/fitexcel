@@ -4,6 +4,7 @@
 #include "AST.hpp"
 #include "CellPosition.hpp"
 #include "ExpressionBuilder.hpp"
+#include "CellValue.hpp"
 
 #include <iostream>
 #include <variant>
@@ -12,7 +13,6 @@
 #include <vector>
 
 using namespace std::literals;
-using CellValue = std::variant<std::monostate, double, std::string>;
 using Cell = std::shared_ptr<Node>;
 using CellReferences = std::vector<std::shared_ptr<CellReferenceNode>>;
 
@@ -50,6 +50,5 @@ private:
     std::map<CellPosition, Cell> table;
 };
 
-using CValue = CellValue; // for progtest
 using CSpreadsheet = Spreadsheet; // for progtest
 #endif

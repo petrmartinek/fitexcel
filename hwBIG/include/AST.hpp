@@ -2,6 +2,7 @@
 #define AST_INCLUDED
 
 #include "CellPosition.hpp"
+#include "CellValue.hpp"
 
 #include <variant>
 #include <string>
@@ -10,8 +11,6 @@
 #include <utility>
 
 using namespace std::literals;
-
-using CellValue = std::variant<std::monostate, double, std::string>;
 
 struct Node
 {

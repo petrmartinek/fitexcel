@@ -1,4 +1,6 @@
 #include "../include/AST.hpp"
+#include "../include/CellPosition.hpp"
+#include "../include/CellValue.hpp"
 
 #include <variant>
 #include <string>

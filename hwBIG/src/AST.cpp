@@ -65,6 +65,27 @@ void CellReferenceNode::updateReferences(const std::pair<int, int>& moveDistance
     position = CellPosition{newColumn, newRow};
 }
 
+std::string CellReferenceNode::toString() const
+{
+    std::string output;
+
+    if(relative != COLUMN_AND_ROW && relative != COLUMN)
+    {
+        output += ABS_SYMBOL;
+    }
+
+    output += position.columnAlpha();
+
+    if(relative != COLUMN_AND_ROW && relative != ROW)
+    {
+        output += ABS_SYMBOL;
+    }
+
+    output += std::to_string(position.row());
+
+    return output;
+}
+
 //------------------------------------------------------------------------------
 
 CellValue AdditionNode::evaluate() const

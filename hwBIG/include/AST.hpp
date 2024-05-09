@@ -64,7 +64,7 @@ struct CellReferenceNode : public Node
 
     CellValue evaluate() const override { return (*lookupTable)[position]->evaluate(); }
 
-    std::string toString() const override { return position.string(); }
+    std::string toString() const override;
 
 private:
     RELATIVE relative;

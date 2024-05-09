@@ -200,7 +200,7 @@ CellValue Spreadsheet::getValue(CellPosition pos)
 
 void Spreadsheet::copyRect(CellPosition dst, CellPosition src, int w, int h)
 {
-    std::pair<int, int> positionShift = {dst.column() - src.column(), dst.row() - src.row()};
+    std::pair<long long, long long> positionShift = { (long long)dst.column() -  (long long)src.column(), (long long)dst.row() -  (long long)src.row()};
 
     for(size_t i = src.column(); i < src.column() + w; ++i)
     {

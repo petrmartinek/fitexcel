@@ -26,7 +26,8 @@ struct Spreadsheet
 {
     static unsigned capabilities()
     {
-        return SPREADSHEET_CYCLIC_DEPS | SPREADSHEET_FUNCTIONS | SPREADSHEET_FILE_IO | SPREADSHEET_SPEED | SPREADSHEET_PARSER;
+        return 0;
+        // return SPREADSHEET_CYCLIC_DEPS | SPREADSHEET_FUNCTIONS | SPREADSHEET_FILE_IO | SPREADSHEET_SPEED | SPREADSHEET_PARSER;
     }
 
     Spreadsheet() = default;

@@ -217,6 +217,8 @@ int main ()
   assert(newExcel.save(newExcel_save_after_load));
   assert(newExcel_save_after_load.str() == newExcel_save_before_load.str());
 
+  CellPosition abcde(1, 0);
+  assert(abcde.string() == "A0");
 
   #else
   CSpreadsheet x0, x1;

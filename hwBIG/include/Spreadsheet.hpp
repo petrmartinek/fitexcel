@@ -37,8 +37,8 @@ struct Spreadsheet
     const Spreadsheet& operator=(const Spreadsheet& other);
     ~Spreadsheet() = default;
 
-    bool load(std::istream &is) { return true; }
-    bool save(std::ostream &os) const { return true; }
+    bool save(std::ostream &os) const;
+    bool load(std::istream &is);
 
     bool setCell(const CellPosition& pos, const std::string& contents);
 

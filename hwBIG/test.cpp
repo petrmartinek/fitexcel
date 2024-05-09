@@ -155,6 +155,34 @@ int main ()
   excel.copyRect(CellPosition("B3"), CellPosition("C1"));
   assert(valueMatch(excel.getValue(CellPosition("B3")), CellValue(excel.getValue(CellPosition("A2")))));
 
+  // save / load
+
+  std::ostringstream save_excel;
+  std::istringstream load_excel;
+  assert(excel.save(save_excel));
+  #define PRINT_SAVE_EXCEL 0
+  #if PRINT_SAVE_EXCEL == 1
+  std::cout << save_excel.str() << std::endl;
+  #endif
+  load_excel.str(save_excel.str());
+  assert(excel.load(load_excel));
+  load_excel.clear();
+  save_excel.str("");
+  save_excel.clear();
+  assert(excel.save(save_excel));
+  #if PRINT_SAVE_EXCEL == 1
+  std::cout << save_excel.str() << std::endl;
+  #endif
+  Spreadsheet newExcel;
+  load_excel.str(save_excel.str());
+  assert(newExcel.load(load_excel));
+
+  assert(valueMatch(excel.getValue(CellPosition("A1")), newExcel.getValue(CellPosition("A1"))));
+  assert(valueMatch(excel.getValue(CellPosition("A2")), newExcel.getValue(CellPosition("A2"))));
+  assert(valueMatch(excel.getValue(CellPosition("A3")), newExcel.getValue(CellPosition("A3"))));
+  assert(valueMatch(excel.getValue(CellPosition("C1")), newExcel.getValue(CellPosition("C1"))));
+  assert(valueMatch(excel.getValue(CellPosition("B5")), newExcel.getValue(CellPosition("B5"))));
+
   #else
   CSpreadsheet x0, x1;
   std::ostringstream oss;

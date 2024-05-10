@@ -11,6 +11,7 @@
 #include <stack>
 #include <vector>
 #include <map>
+#include <set>
 
 using Node_sp = std::shared_ptr<Node>;
 using CellReferenceNode_sp = std::shared_ptr<CellReferenceNode>;
@@ -44,6 +45,8 @@ struct ExpressionBuilder : public CExprBuilder
     void funcCall(std::string fnName, int paramCount) override {}
 
     std::stack<Node_sp> waitingList;
+    std::set<CellPosition> references;
+    
     std::map<CellPosition, Node_sp> * table;
 };
 

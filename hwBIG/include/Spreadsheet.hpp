@@ -14,7 +14,6 @@
 
 using namespace std::literals;
 using Cell = std::shared_ptr<Node>;
-using CellReferences = std::vector<std::shared_ptr<CellReferenceNode>>;
 
 constexpr unsigned SPREADSHEET_CYCLIC_DEPS = 0/* x01 */;
 constexpr unsigned SPREADSHEET_FUNCTIONS = 0/* x02 */;
@@ -48,7 +47,17 @@ struct Spreadsheet
     void copyRect(CellPosition dst, CellPosition src, int w = 1, int h = 1);
 
 private:
+
     std::map<CellPosition, Cell> table;
+    std::map<CellPosition, std::set<CellPosition>> cellReferences;
+   
+    using Vertex = CellPosition;
+    using Graph = std::map<Vertex, std::set<Vertex>>;
+    enum STATE {FRESH, OPENED, CLOSED};
+    using States = std::map<Vertex, STATE>;
+
+    static bool isCyclic(const Graph& graph, const Vertex& start);
+    static void dfs(const Vertex& vertex, const Graph& graph, States& states);
 };
 
 using CSpreadsheet = Spreadsheet; // for progtest

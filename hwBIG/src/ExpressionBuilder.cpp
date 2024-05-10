@@ -159,6 +159,8 @@ void ExpressionBuilder::valReference(std::string val)
 
     CellPosition position{valWithoutAbsoluteSymbols};
 
+    references.insert(position);
+
     // purely relative reference
     if(!numberOfAbsoluteSymbols)
     {

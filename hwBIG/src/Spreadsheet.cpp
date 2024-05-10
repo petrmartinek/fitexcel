@@ -8,6 +8,9 @@
 #include <string>
 #include <utility>
 #include <iostream>
+#include <stdexcept>
+#include <set>
+#include <map>
 
 using namespace std::literals;
 
@@ -19,6 +22,8 @@ Spreadsheet::Spreadsheet(const Spreadsheet& other)
     {
         setCell(cell.first, "="s + cell.second->toString());
     }
+
+    cellReferences = other.cellReferences;
 }
 
 const Spreadsheet& Spreadsheet::operator=(const Spreadsheet& other)
@@ -29,6 +34,8 @@ const Spreadsheet& Spreadsheet::operator=(const Spreadsheet& other)
     {
         setCell(cell.first, "="s + cell.second->toString());
     }
+
+    cellReferences = other.cellReferences;
 
     return *this;
 }
@@ -182,13 +189,14 @@ bool Spreadsheet::setCell(CellPosition pos, std::string contents)
     }
     
     table[pos] = builder.waitingList.top();
+    cellReferences[pos] = builder.references;
 
     return true;
 }
 
 CellValue Spreadsheet::getValue(CellPosition pos)
 {
-    if(!table.contains(pos))
+    if(!table.contains(pos) || isCyclic(cellReferences, pos))
     {
         return CellValue();
     }
@@ -227,4 +235,53 @@ void Spreadsheet::copyRect(CellPosition dst, CellPosition src, int w, int h)
     {
         setCell(cell.first, "="s + cell.second->toString());
     }
+}
+
+//------------------------------------------------------------------------------
+
+bool Spreadsheet::isCyclic(const Graph& graph, const Vertex& start)
+{
+    States states;
+
+    for(const auto& cell : graph)
+    {
+        states[cell.first] = FRESH;
+    }
+
+    try
+    {
+        dfs(start, graph, states);
+    }
+    catch(const std::runtime_error& e)
+    {
+        return true;
+    }
+
+    return false;
+}
+
+void Spreadsheet::dfs(const Vertex& vertex, const Graph& graph, States& states)
+{
+    if(!graph.contains(vertex))
+    {
+        return;
+    }
+
+    if(states[vertex] == OPENED)
+    {
+        throw std::runtime_error("Cyclic reference found");
+    }
+    else if(states[vertex] == CLOSED)
+    {
+        return;
+    }
+
+    states[vertex] = OPENED;
+
+    for(const auto& reference : graph.at(vertex))
+    {
+        dfs(reference, graph, states);
+    }
+
+    states[vertex] = CLOSED;
 }

@@ -242,7 +242,33 @@ int main ()
   assert(valueMatch(rect.getValue(CellPosition("C2")), CellValue(4.)));
   assert(valueMatch(rect.getValue(CellPosition("C3")), CellValue(5.)));
   assert(valueMatch(rect.getValue(CellPosition("C4")), CellValue(6.)));
+
+  // cyclic references test
+
+  Spreadsheet cyclic;
+
+  assert(cyclic.setCell(CellPosition("A0"), "42"));
+  assert(cyclic.setCell(CellPosition("A1"), "=A3 + A0"));
+  assert(cyclic.setCell(CellPosition("A2"), "=A1"));
+  assert(cyclic.setCell(CellPosition("A3"), "=A1"));
+  assert(cyclic.setCell(CellPosition("B1"), "=B1"));
+  assert(cyclic.setCell(CellPosition("C1"), "=B1"));
   
+  assert(valueMatch(cyclic.getValue(CellPosition("A0")), CellValue(42.)));
+  assert(valueMatch(cyclic.getValue(CellPosition("A1")), CellValue()));
+  assert(valueMatch(cyclic.getValue(CellPosition("A2")), CellValue()));
+  assert(valueMatch(cyclic.getValue(CellPosition("A3")), CellValue()));
+  assert(valueMatch(cyclic.getValue(CellPosition("B1")), CellValue()));
+  assert(valueMatch(cyclic.getValue(CellPosition("C1")), CellValue()));
+
+  assert(cyclic.setCell(CellPosition("Z0"), "=Z1 + Z2"));
+  assert(cyclic.setCell(CellPosition("Z1"), "=Z3"));
+  assert(cyclic.setCell(CellPosition("Z2"), "=Z6"));
+  assert(cyclic.setCell(CellPosition("Z3"), "42"));
+  assert(cyclic.setCell(CellPosition("Z6"), "=Z3"));
+
+  assert(valueMatch(cyclic.getValue(CellPosition("Z0")), CellValue(2. * 42)));
+
   #else
   CSpreadsheet x0, x1;
   std::ostringstream oss;

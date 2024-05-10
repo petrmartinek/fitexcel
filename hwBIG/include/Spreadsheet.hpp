@@ -15,7 +15,7 @@
 using namespace std::literals;
 using Cell = std::shared_ptr<Node>;
 
-constexpr unsigned MY_SPREADSHEET_CYCLIC_DEPS = 0/* x01 */;
+constexpr unsigned MY_SPREADSHEET_CYCLIC_DEPS = 0x01;
 constexpr unsigned NY_SPREADSHEET_FUNCTIONS = 0/* x02 */;
 constexpr unsigned MY_SPREADSHEET_FILE_IO = 0/* x04 */;
 constexpr unsigned MY_SPREADSHEET_SPEED = 0/* x08 */;

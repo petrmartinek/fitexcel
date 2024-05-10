@@ -54,29 +54,16 @@ void CellReferenceNode::updateReferences(const std::pair<long long, long long>& 
     size_t newColumn = position.column();
     size_t newRow = position.row();
 
+    // some issues could arise if the new value should be negative
+
     if(relative == COLUMN_AND_ROW || relative == COLUMN)
     {
-        if(moveDistance.first < 0 && (size_t)std::abs(moveDistance.first) >= position.column())
-        {
-            std::cout << "well fuck" << std::endl;
-            newColumn = 1;
-        }
-        else
-        {
-            newColumn += moveDistance.first;
-        }
+        newColumn += moveDistance.first; 
     }
 
     if(relative == COLUMN_AND_ROW || relative == ROW)
     {
-        if(moveDistance.second < 0 &&  (size_t)std::abs(moveDistance.second) >= position.row())
-        {
-            newRow = 0;
-        }
-        else
-        {
-            newRow += moveDistance.second;
-        }
+        newRow += moveDistance.second;
     }
 
     position = CellPosition{newColumn, newRow};

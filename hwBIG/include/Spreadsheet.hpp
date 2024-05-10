@@ -16,7 +16,7 @@ using namespace std::literals;
 using Cell = std::shared_ptr<Node>;
 
 constexpr unsigned MY_SPREADSHEET_CYCLIC_DEPS = 0x01;
-constexpr unsigned NY_SPREADSHEET_FUNCTIONS = 0/* x02 */;
+constexpr unsigned MY_SPREADSHEET_FUNCTIONS = 0/* x02 */;
 constexpr unsigned MY_SPREADSHEET_FILE_IO = 0/* x04 */;
 constexpr unsigned MY_SPREADSHEET_SPEED = 0/* x08 */;
 constexpr unsigned MY_SPREADSHEET_PARSER = 0/* x10 */;
@@ -25,7 +25,7 @@ struct Spreadsheet
 {
     static unsigned capabilities()
     {
-        return MY_SPREADSHEET_CYCLIC_DEPS | NY_SPREADSHEET_FUNCTIONS | MY_SPREADSHEET_FILE_IO | MY_SPREADSHEET_SPEED | MY_SPREADSHEET_PARSER;
+        return MY_SPREADSHEET_CYCLIC_DEPS | MY_SPREADSHEET_FUNCTIONS | MY_SPREADSHEET_FILE_IO | MY_SPREADSHEET_SPEED | MY_SPREADSHEET_PARSER;
     }
 
     Spreadsheet() = default;

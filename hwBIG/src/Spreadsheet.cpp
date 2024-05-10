@@ -239,6 +239,8 @@ void Spreadsheet::copyRect(CellPosition dst, CellPosition src, int w, int h)
 
 //------------------------------------------------------------------------------
 
+// DFS based on presentation slides
+
 bool Spreadsheet::isCyclic(const Graph& graph, const Vertex& start)
 {
     States states;

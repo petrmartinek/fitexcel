@@ -107,13 +107,12 @@ bool Spreadsheet::load(std::istream &is)
         {
             position = std::make_unique<CellPosition>(loadPosition);
         }
-        catch(const std::exception& e)
+        catch(const std::invalid_argument& e)
         {
             // if position identifier is invalid
 
             return false;
         }
-        
 
         std::getline(is, expression, COLUMN_DELIMETER);
 
@@ -168,6 +167,7 @@ bool Spreadsheet::load(std::istream &is)
         return false;
     }
 
+    // overwrite this instance
     *this = loadedSpreadsheet;  
 
     return true; 

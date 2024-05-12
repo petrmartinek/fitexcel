@@ -143,8 +143,6 @@ void ExpressionBuilder::valString(std::string val)
 
 void ExpressionBuilder::valReference(std::string val)
 {    
-    // im hoping that parser is not allowing invalid argument to be passed
-
     using enum CellReferenceNode::RELATIVE;
 
     int numberOfAbsoluteSymbols = std::count(val.begin(), val.end(), CellReferenceNode::ABS_SYMBOL);
@@ -176,6 +174,7 @@ void ExpressionBuilder::valReference(std::string val)
 
         return;
     }
+    
     // row or column is relative
 
     CellReferenceNode::RELATIVE type = (val.front() == CellReferenceNode::ABS_SYMBOL) ? ROW : COLUMN;  

@@ -25,7 +25,7 @@ bool CellPosition::operator<(const CellPosition& other) const
 
 std::ostream& operator<<(std::ostream& os, const CellPosition& pos)
 {
-    os << "Column: " << pos.columnIndex << " Row: " << pos.rowIndex << '\n';
+    os << "Position: " << pos.string() << "| Column: " << pos.columnIndex << "| Row: " << pos.rowIndex << '\n';
     return os;
 }
 
@@ -50,13 +50,14 @@ std::string CellPosition::decToBase26(size_t decimal)
     {
         int remainder = decimal % RADIX;
 
-        hexavigesimal.push_back(remainder != 0 ? UPPER_ALPHABET_INDEX_MOD + remainder : 'Z');
-
-        // zero needs special care
+        // if the remainder is zero, take one RADIX from decimal and make it the remainder
         if(!remainder)
         {
+            remainder = RADIX;
             --decimal;
         }
+
+        hexavigesimal.push_back(UPPER_ALPHABET_INDEX_MOD + remainder);
 
         decimal /= RADIX;
     }
@@ -79,6 +80,7 @@ size_t CellPosition::base26ToDec(const std::string& hexavigesimal)
             throw std::invalid_argument("input not a base-26 number!");
         }
 
+        // makes the coefficient in range of mod 26 case-insensitive
         char coefficient = *it % (std::isupper(*it) ? UPPER_ALPHABET_INDEX_MOD : LOWER_ALPHABET_INDEX_MOD);
 
         decimal += coefficient * std::pow(RADIX, index);
@@ -99,7 +101,7 @@ void CellPosition::createAlphaValues() const
 
 const std::string& CellPosition::getIdentifier() const
 {
-    // empty only if constructed from numbers, instead of string
+    // empty only if constructed from numbers instead from string
     if(!identifier.empty())
     {
         return identifier;
@@ -112,7 +114,7 @@ const std::string& CellPosition::getIdentifier() const
 
 const std::string& CellPosition::getColumnString() const
 {
-    // empty only if constructed from numbers, instead of string
+    // empty only if constructed from numbers instead from string
     if(!columnString.empty())
     {
         return columnString;

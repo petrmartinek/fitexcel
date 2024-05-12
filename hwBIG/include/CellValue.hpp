@@ -6,10 +6,10 @@
 #include <cfloat>
 #include <string>
 
-using CValue = std::variant<std::monostate, double, std::string>;
+using CellValue = std::variant<std::monostate, double, std::string>;
 
-// borrowed from test.cpp
-inline bool valueMatchTop(const CValue& r, const CValue& s)
+// borrowed from test.cpp just renamed cvalue to my naming convention
+inline bool valueMatchTop(const CellValue& r, const CellValue& s)
 {
   if ( r . index () != s . index () )
     return false;
@@ -25,5 +25,5 @@ inline bool valueMatchTop(const CValue& r, const CValue& s)
   return fabs ( std::get<double> ( r ) - std::get<double> ( s ) ) <= 1e8 * DBL_EPSILON * fabs ( std::get<double> ( r ) );
 }
 
-using CellValue = CValue; // for me
+using CValue = CellValue; // progtest
 #endif

@@ -18,10 +18,18 @@ using CellReferenceNode_sp = std::shared_ptr<CellReferenceNode>;
 
 struct ExpressionBuilder : public CExprBuilder
 {
+    /**
+     * @brief Construct a new ExpressionBuilder instance. 
+     */
     ExpressionBuilder() = default;
 
+    /**
+     * @brief Construct a new ExpressionBuilder instance. Sets the pointer on table.
+     * 
+     * @param table pointer to existing table
+     */
     explicit ExpressionBuilder(std::map<CellPosition, Node_sp> * table)
-        : table(table)
+        : waitingList(), references(), table(table)
     {}
 
     void opAdd() override;

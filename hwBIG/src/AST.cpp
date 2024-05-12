@@ -20,7 +20,7 @@ std::string CellValueNode::toString() const
     if(std::holds_alternative<std::string>(value))
     {
         std::string outputString;
-        // trying to make this mess little effective
+        // trying to make this mess little more effective
         outputString.reserve(std::get<std::string>(value).size());
 
         const std::string& inputString = std::get<std::string>(value);
@@ -39,7 +39,7 @@ std::string CellValueNode::toString() const
         return "\""s + outputString + "\""s;
     }
 
-    return "";
+    return ""; // if monostate
 }
 
 //------------------------------------------------------------------------------
@@ -54,7 +54,7 @@ void CellReferenceNode::updateReferences(const std::pair<long long, long long>& 
     size_t newColumn = position.column();
     size_t newRow = position.row();
 
-    // some issues could arise if the new value should be negative
+    // some issues could arise if the new value would be negative
 
     if(relative == COLUMN_AND_ROW || relative == COLUMN)
     {
@@ -85,6 +85,7 @@ std::string CellReferenceNode::toString() const
 
     if(relative != COLUMN_AND_ROW && relative != COLUMN)
     {
+        // if the column is not relative add ABS_SYMBOL before it 
         output += ABS_SYMBOL;
     }
 
@@ -92,6 +93,7 @@ std::string CellReferenceNode::toString() const
 
     if(relative != COLUMN_AND_ROW && relative != ROW)
     {
+        // if the row is not relative add ABS_SYMBOL before it 
         output += ABS_SYMBOL;
     }
 
@@ -117,7 +119,7 @@ CellValue AdditionNode::evaluate() const
         return std::get<double>(lhs) + std::get<double>(rhs);
     }
 
-    // not pretty
+    // not pretty, but it gets the job done
     std::string lhsString = std::holds_alternative<double>(lhs) ? std::to_string(std::get<double>(lhs)) : std::get<std::string>(lhs),
                 rhsString = std::holds_alternative<double>(rhs) ? std::to_string(std::get<double>(rhs)) : std::get<std::string>(rhs);
     
@@ -141,35 +143,15 @@ CellValue NumberOperatorNode::evaluate() const
 
 //------------------------------------------------------------------------------
 
-CellValue SubtractionNode::evaluateNumberOperation(double lhs, double rhs) const
-{
-    return lhs - rhs;
-}
-
-//------------------------------------------------------------------------------
-
 CellValue DivisionNode::evaluateNumberOperation(double lhs, double rhs) const
 {
+    // can't divide by zero
     if(rhs == 0)
     {
         return CellValue();
     }
 
     return lhs / rhs;
-}
-
-//------------------------------------------------------------------------------
-
-CellValue MultiplicationNode::evaluateNumberOperation(double lhs, double rhs) const
-{
-    return lhs * rhs;
-}
-
-//------------------------------------------------------------------------------
-
-CellValue PowerToNode::evaluateNumberOperation(double lhs, double rhs) const
-{
-    return std::pow(lhs, rhs);
 }
 
 //------------------------------------------------------------------------------
@@ -205,77 +187,3 @@ CellValue RelationOperatorNode::evaluate() const
 
     return CellValue();
 }
-
-//------------------------------------------------------------------------------
-
-double LessThanNode::numberRelation(double lhs, double rhs) const
-{
-    return lhs < rhs;
-}
-
-double LessThanNode::textRelation(const std::string& lhs, const std::string& rhs) const
-{
-    return lhs < rhs;
-}
-
-//------------------------------------------------------------------------------
-
-double LessOrEqualThanNode::numberRelation(double lhs, double rhs) const
-{
-    return lhs <= rhs;
-}
-
-double LessOrEqualThanNode::textRelation(const std::string& lhs, const std::string& rhs) const
-{
-    return lhs <= rhs;
-}
-
-//------------------------------------------------------------------------------
-
-double GreaterThanNode::numberRelation(double lhs, double rhs) const
-{
-    return lhs > rhs;
-}
-
-double GreaterThanNode::textRelation(const std::string& lhs, const std::string& rhs) const
-{
-    return lhs > rhs;
-}
-
-//------------------------------------------------------------------------------
-
-double GreaterOrEqualThanNode::numberRelation(double lhs, double rhs) const
-{
-    return lhs >= rhs;
-}
-
-double GreaterOrEqualThanNode::textRelation(const std::string& lhs, const std::string& rhs) const
-{
-    return lhs >= rhs;
-}
-
-//------------------------------------------------------------------------------
-
-double EqualNode::numberRelation(double lhs, double rhs) const
-{
-    return lhs == rhs;
-}
-
-double EqualNode::textRelation(const std::string& lhs, const std::string& rhs) const
-{
-    return lhs == rhs;
-}
-
-//------------------------------------------------------------------------------
-
-double NotEqualNode::numberRelation(double lhs, double rhs) const
-{
-    return lhs != rhs;
-}
-
-double NotEqualNode::textRelation(const std::string& lhs, const std::string& rhs) const
-{
-    return lhs != rhs;
-}
-
-//------------------------------------------------------------------------------

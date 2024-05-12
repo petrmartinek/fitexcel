@@ -9,6 +9,7 @@
 #include <memory>
 #include <map>
 #include <utility>
+#include <cmath>
 
 using namespace std::literals;
 
@@ -18,10 +19,25 @@ struct Node
     virtual ~Node() = default;
 
     virtual std::shared_ptr<Node> clone() const = 0;
+    /**
+     * @brief Offsets the references by `moveDistance`
+     * 
+     * @param moveDistance 2D offset
+     */
     virtual void updateReferences(const std::pair<long long, long long>& moveDistance) = 0;
 
+    /**
+     * @brief Computes the value in AST.
+     * 
+     * @return `CellValue` computed value
+     */
     virtual CellValue evaluate() const = 0;
 
+    /**
+     * @brief Reconstructs the string from the AST.
+     * 
+     * @return `std::string` reconstructed expression 
+     */
     virtual std::string toString() const = 0;
 };
 
@@ -143,7 +159,7 @@ struct SubtractionNode : public NumberOperatorNode
     std::string toString() const override { return std::string("("s + first->toString() + " - "s + second->toString() + ")"s); }
 
 private:
-    CellValue evaluateNumberOperation(double lhs, double rhs) const override;
+    CellValue evaluateNumberOperation(double lhs, double rhs) const override { return lhs - rhs; }
 };
 
 struct DivisionNode : public NumberOperatorNode
@@ -167,7 +183,7 @@ struct MultiplicationNode : public NumberOperatorNode
     std::string toString() const override { return std::string("("s + first->toString() + " * "s + second->toString() + ")"s); }
 
 private:
-    CellValue evaluateNumberOperation(double lhs, double rhs) const override;
+    CellValue evaluateNumberOperation(double lhs, double rhs) const override { return lhs * rhs; }
 };
 
 struct PowerToNode : public NumberOperatorNode
@@ -179,7 +195,7 @@ struct PowerToNode : public NumberOperatorNode
     std::string toString() const override { return std::string("("s + first->toString() + " ^ "s + second->toString() + ")"s); }
 
 private:
-    CellValue evaluateNumberOperation(double lhs, double rhs) const override;
+    CellValue evaluateNumberOperation(double lhs, double rhs) const override { return std::pow(lhs, rhs); }
 };
 
 //------------------------------------------------------------------------------
@@ -193,8 +209,8 @@ struct LessThanNode : public RelationOperatorNode
     std::string toString() const override { return std::string("("s + first->toString() + " < "s + second->toString() + ")"s); }
 
 private:
-    double numberRelation(double lhs, double rhs) const override;
-    double textRelation(const std::string& lhs, const std::string& rhs) const override;
+    double numberRelation(double lhs, double rhs) const override { return lhs < rhs; }
+    double textRelation(const std::string& lhs, const std::string& rhs) const override { return lhs < rhs; }
 };
 
 struct LessOrEqualThanNode : public RelationOperatorNode
@@ -206,8 +222,8 @@ struct LessOrEqualThanNode : public RelationOperatorNode
     std::string toString() const override { return std::string("("s + first->toString() + " <= "s + second->toString() + ")"s); }
 
 private:
-    double numberRelation(double lhs, double rhs) const override;
-    double textRelation(const std::string& lhs, const std::string& rhs) const override;
+    double numberRelation(double lhs, double rhs) const override { return lhs <= rhs; }
+    double textRelation(const std::string& lhs, const std::string& rhs) const override { return lhs <= rhs; }
 };
 struct GreaterThanNode : public RelationOperatorNode
 {
@@ -218,8 +234,8 @@ struct GreaterThanNode : public RelationOperatorNode
     std::string toString() const override { return std::string("("s + first->toString() + " > "s + second->toString() + ")"s); }
 
 private:
-    double numberRelation(double lhs, double rhs) const override;
-    double textRelation(const std::string& lhs, const std::string& rhs) const override;
+    double numberRelation(double lhs, double rhs) const override { return lhs > rhs; }
+    double textRelation(const std::string& lhs, const std::string& rhs) const override { return lhs > rhs; }
 };
 
 struct GreaterOrEqualThanNode : public RelationOperatorNode
@@ -231,8 +247,8 @@ struct GreaterOrEqualThanNode : public RelationOperatorNode
     std::string toString() const override { return std::string("("s + first->toString() + " >= "s + second->toString() + ")"s); }
 
 private:
-    double numberRelation(double lhs, double rhs) const override;
-    double textRelation(const std::string& lhs, const std::string& rhs) const override;
+    double numberRelation(double lhs, double rhs) const override { return lhs >= rhs; }
+    double textRelation(const std::string& lhs, const std::string& rhs) const override { return lhs >= rhs; }
 };
 
 struct EqualNode : public RelationOperatorNode
@@ -244,8 +260,8 @@ struct EqualNode : public RelationOperatorNode
     std::string toString() const override { return std::string("("s + first->toString() + " == "s + second->toString() + ")"s); }
 
 private:
-    double numberRelation(double lhs, double rhs) const override;
-    double textRelation(const std::string& lhs, const std::string& rhs) const override;
+    double numberRelation(double lhs, double rhs) const override { return lhs == rhs; }
+    double textRelation(const std::string& lhs, const std::string& rhs) const override { return lhs == rhs; }
 };
 struct NotEqualNode : public RelationOperatorNode
 {
@@ -256,8 +272,8 @@ struct NotEqualNode : public RelationOperatorNode
     std::string toString() const override { return std::string("("s + first->toString() + " <> "s + second->toString() + ")"s); }
 
 private:
-    double numberRelation(double lhs, double rhs) const override;
-    double textRelation(const std::string& lhs, const std::string& rhs) const override;
+    double numberRelation(double lhs, double rhs) const override { return lhs != rhs; }
+    double textRelation(const std::string& lhs, const std::string& rhs) const override { return lhs != rhs; }
 };
 
 //------------------------------------------------------------------------------
